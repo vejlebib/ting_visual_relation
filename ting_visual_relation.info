@@ -1,0 +1,7 @@
+name = Ting visual relation
+description = Module that implements a Visual relation browser in DDB CMS.
+package = Ding!
+core = 7.x
+dependencies[] = virtual_field
+dependencies[] = ting
+files[] = ting_visual_relation.module   
