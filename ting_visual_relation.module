@@ -67,14 +67,15 @@ function ting_visual_relation_field_formatter_info() {
  * Implements hook_field_formatter_view().
  */
 function ting_visual_relation_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
-	return array(
-		'#theme' => 'html_tag',
-		'#tag' => 'span',
-		'#value' => t('Browse relations'),
-		'#attributes' => array(
-			'class' => 'ting-visual-relations-activator',
-		),
-	);
+	$element = array();
+	// Build the element array as required by Field API.
+	foreach ($items as $delta => $item) {
+		$output = '<span class="ting-visual-relations-activator">' . t('Browse relations') . '</span>';
+		$element[$delta] = array(
+			'#markup' => $output,
+		);
+	}
+	return $element;
 }
 
 
