@@ -26,6 +26,10 @@ function ting_visual_relation_field_info() {
 
 /**
  * Implements hook_field_load().
+ *
+ * Populate the items array with the id of the entities the field is being 
+ * loaded on. If we didn't do this, Field API would think that the field is
+ * empty and our formatters wouldn't be called.
  */
 function ting_visual_relation_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
 	foreach ($entities as $id => $entity) {
