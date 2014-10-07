@@ -6,6 +6,9 @@
  * Module file for the Ting visual relation module.
  */
 
+// include our overriede of the ding_ting_frontend feature.
+include_once 'ting_visual_relation.features.inc';
+
 /**
  * Implements hook_field_info().
  */
@@ -78,4 +81,10 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
 	return $element;
 }
 
+/**
+ * Implements hook_process_ting_object().
+ */
+function ting_visual_relation_process_ting_object(&$vars) {
+	
+}
 
