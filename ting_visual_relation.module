@@ -78,6 +78,10 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
 			'#markup' => $output,
 		);
 	}
+	// Add CSS and JS for our field:
+	$path = drupal_get_path('module', 'ting_visual_relation');
+	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.field.js';
+	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.field.css';
 	return $element;
 }
 
