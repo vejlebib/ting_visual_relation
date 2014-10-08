@@ -6,9 +6,6 @@
  * Module file for the Ting visual relation module.
  */
 
-// include our overriede of the ding_ting_frontend feature.
-include_once 'ting_visual_relation.features.inc';
-
 /**
  * Implements hook_field_info().
  */
@@ -23,6 +20,11 @@ function ting_visual_relation_field_info() {
 			// therefore restrict access by disabling the ability to configure this
 			// field from the admin UI.
 			'no_ui' => TRUE,
+			// See: virtual_field.api.php from virtual_field contrib module.
+			'virtual_field' => array(
+				'entity_types' => array('ting_object', 'ting_collection'),
+				'add_widget' => TRUE,
+			),	
 		),
 	);
 }

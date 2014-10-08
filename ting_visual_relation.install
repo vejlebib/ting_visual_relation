@@ -9,7 +9,8 @@
 /**
  * Implements hook_ding_entity_fields().
  */
-function ting_visual_relation_ding_entity_fields() {
+
+/*function ting_visual_relation_ding_entity_fields() {
 	return array(
 		'ting_visual_relations' => array(
 			'field' => array(
@@ -23,4 +24,4 @@ function ting_visual_relation_ding_entity_fields() {
 			),
 		),
 	);
-}
+}*/

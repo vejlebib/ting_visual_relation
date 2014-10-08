@@ -1,5 +1,5 @@
 name = Ting visual relation
-description = Module that implements a Visual relation browser in DDB CMS.
+description = Implements a Visual relation browser in DDB CMS.
 package = Ding!
 core = 7.x
 version = 7.x-0.2.0
