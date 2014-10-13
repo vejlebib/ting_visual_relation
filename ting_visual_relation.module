@@ -7,7 +7,7 @@
  */
 
 /**
- * Implments hook_menu().
+ * Implements hook_menu().
  */
 function ting_visual_relation_menu() {
 	$items = array();
