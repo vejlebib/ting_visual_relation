@@ -7,6 +7,24 @@
  */
 
 /**
+ * Implments hook_menu().
+ */
+function ting_visual_relation_menu() {
+	$items = array();
+
+	$items['ting-visual-relation/get-ting-object'] = array(
+		'title' => 'Retrieve ting object',
+		'description' => 'Used by the relation browser to retrieve data about ting objects',
+		'page callback' => 'ting_visual_relation_get_ting_object',
+		'access arguments' => array('access content'),
+		'type' => MENU_CALLBACK,
+		'file' => 'ting_visual_relation.pages.inc',
+	);
+
+	return $items;
+}
+
+/**
  * Implements hook_field_info().
  */
 function ting_visual_relation_field_info() {
