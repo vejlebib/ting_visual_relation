@@ -12,38 +12,56 @@
  * Page callback for: ting-visual-relation/get-ting-object
  */
 function ting_visual_relation_get_ting_object($ding_entity) {
-	if (isset($ding_entity)) {
-		// TODO: use ting_object_load() instead of ding_entity_load()?
-		// It seems to be easier to get data with ding_entity, so we will use 
-		// ding_entity_load() for now. We might need to use ting_object_load() 
-		// instead if we run into performance issues.
-		// module_load_include('client.inc', 'ting');
-		// $ting_object = ting_get_object($id);
-		$response = array();
+	// TODO: use ting_object_load() instead of ding_entity_load()?
+	// It seems to be easier to get data with ding_entity, so we will use 
+	// ding_entity_load() for now. We might need to use ting_object_load() 
+	// instead if we run into performance issues.
+	// module_load_include('client.inc', 'ting');
+	// $ting_object = ting_get_object($id);
+
+	// TODO: This code needs to be refactored:
+	$response = array();
+	$data = new stdClass;
+	$data->property = 'id';
+	$data->value = $ding_entity->id;
+	$response[] = $data;
+	$data = new stdClass;
+	$data->property = 'title';
+	$data->value = $ding_entity->title;
+	$response[] = $data;
+	foreach ($ding_entity->creators as $creator) {
 		$data = new stdClass;
-		$data->property = 'title';
-		$data->value = $ding_entity->title;
+		$data->property = 'creator';
+		$data->value = $creator;
 		$response[] = $data;
-		$callback = $_REQUEST['callback'];
-		// If it's a jsonp request with a valid javascript callback function
-		// For an explanation of the use of ctype_alumn see:
-		// http://stackoverflow.com/questions/20958218/is-it-necessary-to-validate-or-escape-the-jsonp-callback-string	
-		if (isset($callback) && ctype_alnum($callback)) {
-			$response = drupal_json_encode($response);
-			$response = _fix_unicode_for_json($response);
-			//$response = drupal_json_encode($response);
-			header('Content-type: text/javascript');
-			echo $callback . '(' . $response . ');';
-		}
-		// If normal json request or invalid callback: Return normal json as fallback
-		else {
-			drupal_json_output($response);
-		}
+	}
+	foreach ($ding_entity->subjects as $subject) {
+		$data = new stdClass;
+		$data->property = 'subject';
+		$data->value = $subject;
+		$response[] = $data;
+	}
+
+	// If it's a jsonp request with a valid javascript callback function
+	// For an explanation of the use of ctype_alumn see:
+	// http://stackoverflow.com/questions/20958218/is-it-necessary-to-validate-or-escape-the-jsonp-callback-string	
+	$callback = $_REQUEST['callback'];
+	if (isset($callback) && ctype_alnum($callback)) {
+		$response = drupal_json_encode($response);
+		$response = _fix_unicode_for_json($response);
+		//$response = drupal_json_encode($response);
+		header('Content-type: text/javascript');
+		echo $callback . '(' . $response . ');';
+	}
+	// If normal json request or invalid callback: Return normal json as fallback
+	else {
+		drupal_json_output($response);
 	}
 }
 
 /**
- * Replaces escaped unicode characters with actual unicode charaters.
+ * Helper function to replace escaped unicode characters with actual unicode 
+ * charaters.
  *
  * See: http://stackoverflow.com/questions/14523846/convert-unicode-from-json-string-with-php
  */
