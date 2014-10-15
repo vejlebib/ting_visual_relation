@@ -12,10 +12,11 @@
 function ting_visual_relation_menu() {
 	$items = array();
 
-	$items['ting-visual-relation/get-ting-object'] = array(
+	$items['ting-visual-relation/get-ting-object/%ding_entity'] = array(
 		'title' => 'Retrieve ting object',
 		'description' => 'Used by the relation browser to retrieve data about ting objects',
 		'page callback' => 'ting_visual_relation_get_ting_object',
+		'page arguments' => array(2),
 		'access arguments' => array('access content'),
 		'type' => MENU_CALLBACK,
 		'file' => 'ting_visual_relation.pages.inc',
