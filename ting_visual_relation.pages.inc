@@ -12,12 +12,12 @@
  * Page callback for: ting-visual-relation/get-ting-object
  */
 function ting_visual_relation_get_ting_object($ding_entity) {
-	// TODO: use ting_object_load() instead of ding_entity_load()?
+	// TODO: use ting_get_object() instead of ding_entity_load()?
 	// It seems to be easier to get data with ding_entity, so we will use 
-	// ding_entity_load() for now. We might need to use ting_object_load() 
+	// ding_entity_load() for now. We might need to use ting_get_object() 
 	// instead if we run into performance issues.
 	// module_load_include('client.inc', 'ting');
-	// $ting_object = ting_get_object($id);
+	// $ting_object = ting_get_object($id); 
 
 	// TODO: This code needs to be refactored:
 	$response = array();
@@ -42,14 +42,12 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 		$response[] = $data;
 	}
 
-	// If it's a jsonp request with a valid javascript callback function
-	// For an explanation of the use of ctype_alumn see:
-	// http://stackoverflow.com/questions/20958218/is-it-necessary-to-validate-or-escape-the-jsonp-callback-string	
+	// TODO: Find a proper way to valide the javascript callback function
 	$callback = $_REQUEST['callback'];
-	if (isset($callback) && ctype_alnum($callback)) {
+	// If it's a jsonp request
+	if (isset($callback) && $callback != '') {
 		$response = drupal_json_encode($response);
 		$response = _fix_unicode_for_json($response);
-		//$response = drupal_json_encode($response);
 		header('Content-type: text/javascript');
 		echo $callback . '(' . $response . ');';
 	}
