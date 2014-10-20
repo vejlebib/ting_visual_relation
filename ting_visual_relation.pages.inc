@@ -53,7 +53,7 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 	// If it's a jsonp request
 	if (isset($callback) && $callback != '') {
 		$response = drupal_json_encode($response);
-		$response = _ting_visual_relation_fix_unicode_for_json($response);
+		// $response = _ting_visual_relation_fix_unicode_for_json($response);
 		header('Content-type: text/javascript');
 		echo $callback . '(' . $response . ');';
 	}
