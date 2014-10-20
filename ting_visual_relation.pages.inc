@@ -48,10 +48,9 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 		$response[] = $data;
 	}
 
-	// TODO: Find a proper way to valide the javascript callback function
 	$callback = $_REQUEST['callback'];
-	// If it's a jsonp request
-	if (isset($callback) && $callback != '') {
+	// If it's a jsonp request with a valid javascript function
+	if (isset($callback) && _ting_visual_relation_validate_func_name($callback)) {
 		$response = drupal_json_encode($response);
 		// $response = _ting_visual_relation_fix_unicode_for_json($response);
 		header('Content-type: text/javascript');
@@ -77,6 +76,14 @@ function ting_visual_relation_get_ting_object($ding_entity) {
  */
 function _ting_visual_relation_get_cover($ding_entity) {
 
+}
+
+/**
+ * Helper function to validate a javascript function name. It's considered 
+ * valid if name only consist of alphanumeric characters and underscore.
+ */
+function _ting_visual_relation_validate_func_name($function_name) {
+	return ctype_alnum(str_replace('_', '', $function_name));
 }
 
 /**
