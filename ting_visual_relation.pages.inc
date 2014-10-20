@@ -47,6 +47,7 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 	foreach ($ding_entity->relations as $relation) {
 		$data = new stdClass;
 		$data->property = 'relation';
+		$data->type = $relation->type;
 		$data->value = $relation->object->ding_entity_id;
 		$response[] = $data;
 	}
