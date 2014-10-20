@@ -11,17 +11,17 @@ module_load_include('inc', 'ting_covers', 'ting_covers.pages');
 
 /**
  * Get data about the ting object with the specified $id.
- * 
+ *
  * Page callback for: ting-visual-relation/get-ting-object
  */
 function ting_visual_relation_get_ting_object($ding_entity) {
 	// TODO: use ting_get_object() instead of ding_entity_load()?
-	// It seems to be easier to get data with ding_entity, so we will use 
-	// ding_entity_load() for now. We might need to use ting_get_object() 
+	// It seems to be easier to get data with ding_entity, so we will use
+	// ding_entity_load() for now. We might need to use ting_get_object()
 	// instead if we run into performance issues.
 	// module_load_include('client.inc', 'ting');
-	// $ting_object = ting_get_object($id); 
-	
+	// $ting_object = ting_get_object($id);
+
 	// TODO: This code needs to be refactored:
 	$response = array();
 	$data = new stdClass;
@@ -80,9 +80,9 @@ function ting_visual_relation_get_ting_object($ding_entity) {
  * ting_covers module.
  *
  * TODO: Add option for admins to choose image_style for returned covers?
- * 
+ *
  * @param $ding_entity
- *   A ding_entity wrapper-object for the data-well object the cover is 
+ *   A ding_entity wrapper-object for the data-well object the cover is
  *   being requested on.
  * @return $cover_url
  *   A URL for the local copy of the cover.
@@ -102,9 +102,9 @@ function _ting_visual_relation_get_cover_url($ding_entity) {
 	// Otherwise try to download the cover
 	try {
 		$service = new AdditionalInformationService(
-			variable_get('addi_wsdl_url'), 
-			variable_get('addi_username'), 
-			variable_get('addi_group'), 
+			variable_get('addi_wsdl_url'),
+			variable_get('addi_username'),
+			variable_get('addi_group'),
 			variable_get('addi_password')
 		);
 		$additinal_information = $service->getByLocalIdentifier((object) array(
@@ -126,25 +126,25 @@ function _ting_visual_relation_get_cover_url($ding_entity) {
 		 // No cover image found? Cache this for future reference to avoid
      // unnecessary requests and return FALSE.
 		cache_set(
-			'ting_covers:' . $local_id, 
+			'ting_covers:' . $local_id,
 			1, // Just need some value
-			'cache', 
+			'cache',
 			$_SERVER['REQUEST_TIME'] + TING_COVERS_DEFAULT_CACHE_LIFETIME
 		);
 		return FALSE;
 	}
   catch (Exception $e) {
     watchdog(
-    	'ting_visual_relation', 
-    	'Unable to retrieve covers from ADDI to the relation browser: %message', 
-    	array('%message' => $e->getMessage()), 
+    	'ting_visual_relation',
+    	'Unable to retrieve covers from ADDI to the relation browser: %message',
+    	array('%message' => $e->getMessage()),
     	WATCHDOG_ERROR
     );
-  }	
+  }
 }
 
 /**
- * Helper function to validate a javascript function name. It's considered 
+ * Helper function to validate a javascript function name. It's considered
  * valid if name only consist of alphanumeric characters and underscore.
  */
 function _ting_visual_relation_validate_func_name($function_name) {
@@ -152,7 +152,7 @@ function _ting_visual_relation_validate_func_name($function_name) {
 }
 
 /**
- * Helper function to replace escaped unicode characters with actual unicode 
+ * Helper function to replace escaped unicode characters with actual unicode
  * charaters.
  *
  * See: http://stackoverflow.com/questions/14523846/convert-unicode-from-json-string-with-php
