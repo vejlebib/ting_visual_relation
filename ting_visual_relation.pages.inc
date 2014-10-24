@@ -12,7 +12,7 @@ module_load_include('inc', 'ting_covers', 'ting_covers.pages');
 /**
  * Get data about the ting object with the specified $id.
  *
- * Page callback for: ting-visual-relation/get-ting-object
+ * Ajax callback for: ting-visual-relation/get-ting-object
  */
 function ting_visual_relation_get_ting_object($ding_entity) {
 	// TODO: use ting_get_object() instead of ding_entity_load()?
@@ -22,41 +22,27 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 	// module_load_include('client.inc', 'ting');
 	// $ting_object = ting_get_object($id);
 
-	// TODO: This code needs to be refactored:
-	$response = array();
-	$data = new stdClass;
-	$data->property = 'id';
-	$data->value = $ding_entity->id;
-	$response[] = $data;
-	$data = new stdClass;
-	$data->property = 'title';
-	$data->value = $ding_entity->title;
-	$response[] = $data;
-	foreach ($ding_entity->creators as $creator) {
-		$data = new stdClass;
-		$data->property = 'creator';
-		$data->value = $creator;
-		$response[] = $data;
-	}
-	foreach ($ding_entity->subjects as $subject) {
-		$data = new stdClass;
-		$data->property = 'subject';
-		$data->value = $subject;
-		$response[] = $data;
-	}
-	foreach ($ding_entity->relations as $relation) {
-		$data = new stdClass;
-		$data->property = 'relation';
-		$data->type = $relation->type;
-		$data->value = $relation->object->ding_entity_id;
-		$response[] = $data;
-	}
+  $response = array();
 
-	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
-		$data = new stdClass;
-		$data->property = 'cover';
-		$data->value = $cover_url;
+  // Populate response-array with simple properties.
+  $properties = _ting_visual_relation_ting_object_properties();
+  foreach ($properties as $getter => $name) {
+    $property = $ding_entity->{$getter};
+    $property = is_array($property) ? $property : array($property);
+    foreach ($property as $value) {
+      $response[] = _ting_visual_relation_property_value_object($name, $value);
+    }
+  }
+  // Populate response-array with relations.
+	foreach ($ding_entity->relations as $relation) {
+    $value = $relation->object->ding_entity_id;
+    $data = _ting_visual_relation_property_value_object('relation', $value);
+    $data->type = $relation->type;
 		$response[] = $data;
+	}
+  // Populate response-array with cover url if possible.
+	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
+		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
 	}
 
 	$callback = $_REQUEST['callback'];
@@ -71,6 +57,38 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 	else {
 		drupal_json_output($response);
 	}
+}
+
+/**
+ * Helper-function to hold the simple ting_object properties we return.
+ *
+ * @return $properties
+ *   An array with property getter-method as key and property name as value.
+ */
+function _ting_visual_relation_ting_object_properties() {
+  return array(
+    'id' => 'id',
+    'title' => 'title',
+    'creators' => 'creator',
+    'subjects' => 'subject',
+  );
+}
+
+/**
+ * Helper-function to prepare a property-value data-object.
+ *
+ * @param $name
+ *   The name of the property.
+ * @param $value
+ *   The value of the property.
+ * @return $data
+ *   A data-object with propery and value set.
+ */
+function _ting_visual_relation_property_value_object($name, $value) {
+  $data = new stdClass;
+  $data->property = $name;
+  $data->value = $value;
+  return $data;
 }
 
 /**
@@ -94,6 +112,7 @@ function ting_visual_relation_get_cover_url($ding_entity) {
 	$localId = $ding_entity->localId;
   // Don't do anything if the cover is a known negative.
   if (!cache_get('ting_covers:' . $localId)) {
+    $path = ting_covers_object_path($localId);
     // If the cover is allready saved locally, just use that.
     if (file_exists($path)) {
       $cover_url = file_create_url($path);
@@ -120,7 +139,7 @@ function ting_visual_relation_get_cover_url($ding_entity) {
       			$source_url = $addi_info->thumbnailUrl;
       		}
       		if ($source_url) {
-      			$path = _ting_covers_pages_fetch_image($path, $source_url);
+      			_ting_covers_pages_fetch_image($path, $source_url);
       			$cover_url = file_create_url($path);
       		}
           // Cache this for future reference to avoid unnecessary requests.
