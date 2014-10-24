@@ -21,6 +21,15 @@ function ting_visual_relation_menu() {
 		'type' => MENU_CALLBACK,
 		'file' => 'ting_visual_relation.pages.inc',
 	);
+  $items['ting-visual-relation/get-ting-collection'] = array(
+    'title' => 'Retrieve ting collection',
+    'description' => 'Used by the relation browser to retrieve data about ting collections',
+    'page callback' => 'ting_visual_relation_get_ting_collection',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ting_visual_relation.pages.inc',
+  );
 
 	return $items;
 }

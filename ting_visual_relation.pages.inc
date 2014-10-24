@@ -10,7 +10,7 @@
 module_load_include('inc', 'ting_covers', 'ting_covers.pages');
 
 /**
- * Get data about the ting object with the specified $id.
+ * Get data about the ting objects.
  *
  * Ajax callback for: ting-visual-relation/get-ting-object
  */
@@ -48,10 +48,7 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 	$callback = $_REQUEST['callback'];
 	// If it's a jsonp request with a valid javascript function
 	if (isset($callback) && _ting_visual_relation_validate_func_name($callback)) {
-		$response = drupal_json_encode($response);
-		// $response = _ting_visual_relation_fix_unicode_for_json($response);
-		header('Content-type: text/javascript');
-		echo $callback . '(' . $response . ');';
+    ting_visual_relation_jsonp_output($response, $callback);
 	}
 	// If normal json request or invalid callback: Return normal json as fallback
 	else {
@@ -90,6 +87,26 @@ function _ting_visual_relation_property_value_object($name, $value) {
   $data->value = $value;
   return $data;
 }
+
+/**
+ * Get data about the ting collections.
+ *
+ * Ajax callback for: ting-visual-relation/get-ting-collection
+ */
+function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
+
+}
+
+/**
+ * Return data in JSONP format.
+ */
+function ting_visual_relation_jsonp_output($response, $callback) {
+  $response = drupal_json_encode($response);
+  // $response = _ting_visual_relation_fix_unicode_for_json($response);
+  header('Content-type: text/javascript');
+  echo $callback . '(' . $response . ');';
+}
+
 
 /**
  * Helper function to get URL of the cover of a data-well object.
