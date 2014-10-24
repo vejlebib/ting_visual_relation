@@ -68,6 +68,7 @@ function _ting_visual_relation_ting_object_properties() {
     'title' => 'title',
     'creators' => 'creator',
     'subjects' => 'subject',
+    'type' => 'type',
   );
 }
 
