@@ -87,7 +87,7 @@ function ting_visual_relation_get_ting_object($ding_entity) {
  *   being requested on.
  * @return $cover_url
  *   A URL for the local copy of the cover.
- *   Ŕeturns FALSE if no cover was found.
+ *   FALSE if no cover was found.
  */
 function ting_visual_relation_get_cover_url($ding_entity) {
   $cover_url = FALSE;
