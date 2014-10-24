@@ -108,22 +108,23 @@ function ting_visual_relation_get_cover_url($ding_entity) {
 			variable_get('addi_group'),
 			variable_get('addi_password')
 		);
-		$additinal_information = $service->getByLocalIdentifier((object) array(
+		$addi_info = $service->getByLocalIdentifier((object) array(
 			'localIdentifier' => $localId,
 			'libraryCode' => $ding_entity->ownerId,
 		));
-		$additinal_information = $additinal_information[$localId];
-		$source_url = FALSE;
-		if ($additinal_information->detailUrl) {
-			$source_url = $additinal_information->detailUrl;
-		}
-		else if ($additinal_information->thumbnailUrl) {
-			$source_url = $additinal_information->thumbnailUrl;
-		}
-		if ($source_url) {
-			$path = _ting_covers_pages_fetch_image($path, $source_url);
-			return file_create_url($path);
-		}
+    if (isset($addi_info[$localId]) && $addi_info = $addi_info[$localId]) {
+  		$source_url = FALSE;
+  		if ($addi_info->detailUrl) {
+  			$source_url = $addi_info->detailUrl;
+  		}
+  		else if ($addi_info->thumbnailUrl) {
+  			$source_url = $addi_info->thumbnailUrl;
+  		}
+  		if ($source_url) {
+  			$path = _ting_covers_pages_fetch_image($path, $source_url);
+  			return file_create_url($path);
+  		}
+    }
 		 // No cover image found? Cache this for future reference to avoid
      // unnecessary requests and return FALSE.
 		cache_set(

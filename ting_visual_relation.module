@@ -43,7 +43,7 @@ function ting_visual_relation_field_info() {
 			'virtual_field' => array(
 				'entity_types' => array('ting_object', 'ting_collection'),
 				'add_widget' => TRUE,
-			),	
+			),
 		),
 	);
 }
@@ -51,7 +51,7 @@ function ting_visual_relation_field_info() {
 /**
  * Implements hook_field_load().
  *
- * Populate the items array with the id of the entities the field is being 
+ * Populate the items array with the id of the entities the field is being
  * loaded on. If we didn't do this, Field API would think that the field is
  * empty and our formatters wouldn't be called.
  */
@@ -64,7 +64,7 @@ function ting_visual_relation_field_load($entity_type, $entities, $field, $insta
 /**
  * Implements hook_widget_info_alter().
  *
- * We implement this hook to add our field type to the list of supported 
+ * We implement this hook to add our field type to the list of supported
  * fields, for the 'hidden' field widget defined in core.
  */
 function ting_visual_relation_widget_info_alter(&$info) {
@@ -110,6 +110,6 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
  * Implements hook_process_ting_object().
  */
 function ting_visual_relation_process_ting_object(&$vars) {
-	
+
 }
 
