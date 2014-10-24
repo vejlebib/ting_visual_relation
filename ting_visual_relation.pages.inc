@@ -76,8 +76,9 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 /**
  * Helper function to get URL of the cover of a data-well object.
  *
- * Inspired by ting_covers_objects() method from ting_covers_pages.inc in the
- * ting_covers module.
+ * A simplification of the ting_covers_objects() function from
+ * ting_covers_pages.inc in the ting_covers module. Here we only return a URL
+ * for the cover and we only operate on one cover each call.
  *
  * TODO: Add option for admins to choose image_style for returned covers?
  *
