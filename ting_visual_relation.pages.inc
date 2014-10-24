@@ -94,7 +94,23 @@ function _ting_visual_relation_property_value_object($name, $value) {
  * Ajax callback for: ting-visual-relation/get-ting-collection
  */
 function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
-
+  $response = array();
+  module_load_include('client.inc', 'ting');
+  if (isset($ding_entity_id) && ting_get_object($ding_entity_id, TRUE)) {
+    $ding_entity_collection = ding_entity_collection_load($ding_entity_id);
+    foreach ($ding_entity_collection->entities as $ding_entity) {
+      $response[] = $ding_entity->id;
+    }
+  }
+  $callback = $_REQUEST['callback'];
+  // If it's a jsonp request with a valid javascript function
+  if (isset($callback) && _ting_visual_relation_validate_func_name($callback)) {
+    ting_visual_relation_jsonp_output($response, $callback);
+  }
+  // If normal json request or invalid callback: Return normal json as fallback
+  else {
+    drupal_json_output($response);
+  }
 }
 
 /**
