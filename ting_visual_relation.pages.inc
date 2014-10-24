@@ -90,59 +90,61 @@ function ting_visual_relation_get_ting_object($ding_entity) {
  *   Ŕeturns FALSE if no cover was found.
  */
 function ting_visual_relation_get_cover_url($ding_entity) {
+  $cover_url = FALSE;
 	$localId = $ding_entity->localId;
-	// Determine if the local id is a known negative
-  if (cache_get('ting_covers:' . $localId)) {
-	  return FALSE;
-  }
-	$path = ting_covers_object_path($localId);
-	// If the cover is allready saved locally then just use that
-	if (file_exists($path)) {
-		return file_create_url($path);
-	}
-	// Otherwise try to download the cover
-	try {
-		$service = new AdditionalInformationService(
-			variable_get('addi_wsdl_url'),
-			variable_get('addi_username'),
-			variable_get('addi_group'),
-			variable_get('addi_password')
-		);
-		$addi_info = $service->getByLocalIdentifier((object) array(
-			'localIdentifier' => $localId,
-			'libraryCode' => $ding_entity->ownerId,
-		));
-    if (isset($addi_info[$localId]) && $addi_info = $addi_info[$localId]) {
-  		$source_url = FALSE;
-  		if ($addi_info->detailUrl) {
-  			$source_url = $addi_info->detailUrl;
-  		}
-  		else if ($addi_info->thumbnailUrl) {
-  			$source_url = $addi_info->thumbnailUrl;
-  		}
-  		if ($source_url) {
-  			$path = _ting_covers_pages_fetch_image($path, $source_url);
-  			return file_create_url($path);
-  		}
+  // Don't do anything if the cover is a known negative.
+  if (!cache_get('ting_covers:' . $localId)) {
+    // If the cover is allready saved locally, just use that.
+    if (file_exists($path)) {
+      $cover_url = file_create_url($path);
     }
-		 // No cover image found? Cache this for future reference to avoid
-     // unnecessary requests and return FALSE.
-		cache_set(
-			'ting_covers:' . $local_id,
-			1, // Just need some value
-			'cache',
-			$_SERVER['REQUEST_TIME'] + TING_COVERS_DEFAULT_CACHE_LIFETIME
-		);
-		return FALSE;
-	}
-  catch (Exception $e) {
-    watchdog(
-    	'ting_visual_relation',
-    	'Unable to retrieve covers from ADDI to the relation browser: %message',
-    	array('%message' => $e->getMessage()),
-    	WATCHDOG_ERROR
-    );
+    // Otherwise try to download the cover.
+    else {
+    	try {
+    		$service = new AdditionalInformationService(
+    			variable_get('addi_wsdl_url'),
+    			variable_get('addi_username'),
+    			variable_get('addi_group'),
+    			variable_get('addi_password')
+    		);
+    		$addi_info = $service->getByLocalIdentifier((object) array(
+    			'localIdentifier' => $localId,
+    			'libraryCode' => $ding_entity->ownerId,
+    		));
+        if (isset($addi_info[$localId]) && $addi_info = $addi_info[$localId]) {
+      		$source_url = FALSE;
+      		if ($addi_info->detailUrl) {
+      			$source_url = $addi_info->detailUrl;
+      		}
+      		else if ($addi_info->thumbnailUrl) {
+      			$source_url = $addi_info->thumbnailUrl;
+      		}
+      		if ($source_url) {
+      			$path = _ting_covers_pages_fetch_image($path, $source_url);
+      			$cover_url = file_create_url($path);
+      		}
+          // Cache this for future reference to avoid unnecessary requests.
+          else {
+        		cache_set(
+        		  'ting_covers:' . $local_id,
+        			1, // Just need some value
+        			'cache',
+        			$_SERVER['REQUEST_TIME'] + TING_COVERS_DEFAULT_CACHE_LIFETIME
+        		);
+          }
+        }
+    	}
+      catch (Exception $e) {
+        watchdog(
+        	'ting_visual_relation',
+        	'Unable to retrieve covers from ADDI to the relation browser: %message',
+        	array('%message' => $e->getMessage()),
+        	WATCHDOG_ERROR
+        );
+      }
+    }
   }
+  return $cover_url;
 }
 
 /**
