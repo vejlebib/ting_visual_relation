@@ -52,7 +52,7 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 		$response[] = $data;
 	}
 
-	if ($cover_url = _ting_visual_relation_get_cover_url($ding_entity)) {
+	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
 		$data = new stdClass;
 		$data->property = 'cover';
 		$data->value = $cover_url;
@@ -89,7 +89,7 @@ function ting_visual_relation_get_ting_object($ding_entity) {
  *   A URL for the local copy of the cover.
  *   Ŕeturns FALSE if no cover was found.
  */
-function _ting_visual_relation_get_cover_url($ding_entity) {
+function ting_visual_relation_get_cover_url($ding_entity) {
 	$localId = $ding_entity->localId;
 	// Determine if the local id is a known negative
   if (cache_get('ting_covers:' . $localId)) {
