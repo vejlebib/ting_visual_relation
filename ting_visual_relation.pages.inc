@@ -26,11 +26,11 @@ function ting_visual_relation_get_ting_object($ding_entity) {
 
   // Populate response-array with simple properties.
   $properties = _ting_visual_relation_ting_object_properties();
-  foreach ($properties as $getter => $name) {
-    $property = $ding_entity->{$getter};
-    $property = is_array($property) ? $property : array($property);
-    foreach ($property as $value) {
-      $response[] = _ting_visual_relation_property_value_object($name, $value);
+  foreach ($properties as $getter => $property) {
+    $values = $ding_entity->{$getter};
+    $values = is_array($values) ? $values : array($values);
+    foreach ($values as $value) {
+      $response[] = _ting_visual_relation_property_value_object($property, $value);
     }
   }
   // Populate response-array with relations.
