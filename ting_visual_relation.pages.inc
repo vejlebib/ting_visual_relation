@@ -27,10 +27,11 @@ function ting_visual_relation_get_ting_object($ding_entity) {
   // Populate response-array with simple properties.
   $properties = _ting_visual_relation_ting_object_properties();
   foreach ($properties as $getter => $property) {
-    $values = $ding_entity->{$getter};
-    $values = is_array($values) ? $values : array($values);
-    foreach ($values as $value) {
-      $response[] = _ting_visual_relation_property_value_object($property, $value);
+    if ($values = $ding_entity->{$getter}) {
+      $values = is_array($values) ? $values : array($values);
+      foreach ($values as $value) {
+        $response[] = _ting_visual_relation_property_value_object($property, $value);
+      }
     }
   }
   // Populate response-array with relations.
@@ -75,16 +76,16 @@ function _ting_visual_relation_ting_object_properties() {
 /**
  * Helper-function to prepare a property-value data-object.
  *
- * @param $name
- *   The name of the property.
+ * @param $property
+ *   The property.
  * @param $value
  *   The value of the property.
  * @return $data
  *   A data-object with propery and value set.
  */
-function _ting_visual_relation_property_value_object($name, $value) {
+function _ting_visual_relation_property_value_object($property, $value) {
   $data = new stdClass;
-  $data->property = $name;
+  $data->property = $property;
   $data->value = $value;
   return $data;
 }
