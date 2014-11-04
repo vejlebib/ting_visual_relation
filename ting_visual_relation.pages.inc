@@ -6,45 +6,46 @@
  * Defines forms and page callbacks for the Ting visual relation module.
  */
 
-// Load ting_covers.pages.inc for its helper functions
+// Load additianal includes for its helper functions
 module_load_include('inc', 'ting_covers', 'ting_covers.pages');
+module_load_include('client.inc', 'ting');
 
 /**
  * Get data about the ting objects.
  *
  * Ajax callback for: ting-visual-relation/get-ting-object
  */
-function ting_visual_relation_get_ting_object($ding_entity) {
-	// TODO: use ting_get_object() instead of ding_entity_load()?
-	// It seems to be easier to get data with ding_entity, so we will use
-	// ding_entity_load() for now. We might need to use ting_get_object()
-	// instead if we run into performance issues.
-	// module_load_include('client.inc', 'ting');
-	// $ting_object = ting_get_object($id);
-
+function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
+  // Initialise our response array.
   $response = array();
-
-  // Populate response-array with simple properties.
-  $properties = _ting_visual_relation_ting_object_properties();
-  foreach ($properties as $getter => $property) {
-    if ($values = $ding_entity->{$getter}) {
-      $values = is_array($values) ? $values : array($values);
-      foreach ($values as $value) {
-        $response[] = _ting_visual_relation_property_value_object($property, $value);
+  // Only return something if the supplied $ding_entity_id results in a valid
+  // object from the datawell. Doing it this way prevents invalid rows in the
+  // ting_object table and there's practically no performance overhead since
+  // ting_get_object caches the result.
+  if (isset($ding_entity_id) && ting_get_object($ding_entity_id)) {
+    $ding_entity = ding_entity_load($ding_entity_id);
+    // Populate response-array with simple properties.
+    $properties = _ting_visual_relation_ting_object_properties();
+    foreach ($properties as $getter => $property) {
+      if ($values = $ding_entity->{$getter}) {
+        $values = is_array($values) ? $values : array($values);
+        foreach ($values as $value) {
+          $response[] = _ting_visual_relation_property_value_object($property, $value);
+        }
       }
     }
+    // Populate response-array with relations.
+  	foreach ($ding_entity->relations as $relation) {
+      $value = $relation->object->ding_entity_id;
+      $data = _ting_visual_relation_property_value_object('relation', $value);
+      $data->type = $relation->type;
+  		$response[] = $data;
+  	}
+    // Populate response-array with cover url if possible.
+  	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
+  		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
+  	}
   }
-  // Populate response-array with relations.
-	foreach ($ding_entity->relations as $relation) {
-    $value = $relation->object->ding_entity_id;
-    $data = _ting_visual_relation_property_value_object('relation', $value);
-    $data->type = $relation->type;
-		$response[] = $data;
-	}
-  // Populate response-array with cover url if possible.
-	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
-		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
-	}
 
 	$callback = $_REQUEST['callback'];
 	// If it's a jsonp request with a valid javascript function
@@ -97,7 +98,6 @@ function _ting_visual_relation_property_value_object($property, $value) {
  */
 function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
   $response = array();
-  module_load_include('client.inc', 'ting');
   if (isset($ding_entity_id) && ting_get_object($ding_entity_id, TRUE)) {
     $ding_entity_collection = ding_entity_collection_load($ding_entity_id);
     foreach ($ding_entity_collection->entities as $ding_entity) {
