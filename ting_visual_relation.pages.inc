@@ -10,6 +10,9 @@
 module_load_include('inc', 'ting_covers', 'ting_covers.pages');
 module_load_include('client.inc', 'ting');
 
+// The agency used for global posts.
+define('TING_VISUAL_RELATION_GLOBAL_AGENCY', 870970);
+
 /**
  * Get data about the ting objects.
  *
@@ -18,6 +21,7 @@ module_load_include('client.inc', 'ting');
 function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
   // Initialise our response array.
   $response = array();
+
   // Only return something if the supplied $ding_entity_id results in a valid
   // object from the datawell. Doing it this way prevents invalid rows in the
   // ting_object table and there's practically no performance overhead since
@@ -47,15 +51,7 @@ function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
   	}
   }
 
-	$callback = $_REQUEST['callback'];
-	// If it's a jsonp request with a valid javascript function
-	if (isset($callback) && _ting_visual_relation_validate_func_name($callback)) {
-    ting_visual_relation_jsonp_output($response, $callback);
-	}
-	// If normal json request or invalid callback: Return normal json as fallback
-	else {
-		drupal_json_output($response);
-	}
+  ting_visual_relation_json_output($response);
 }
 
 /**
@@ -104,25 +100,62 @@ function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
       $response[] = $ding_entity->id;
     }
   }
+  ting_visual_relation_json_output($response);
+}
+
+/**
+ * Get recommendations based on a ding_entity_id.
+ *
+ * Ajax callback for: ting-visual-relation/get-recommendations
+ *
+ * @param $count
+ *   The number of recommendations to return. Defaults to 3.
+ */
+function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count = 3) {
+  $response = array();
+  // TODO: Implement caching of recommendations and check that first.
+  if (isset($ding_entity_id)) {
+    // For now we will only support object recommendations.
+    $object = ting_get_object($ding_entity_id);
+    if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
+      $identifier = $object->record['dc:identifier']['dkdcplus:ISBN'];
+      $recommendations = ting_get_object_recommendations($identifier, $count);
+      // Convert to data well 3 PID's
+      foreach ($recommendations as $recommendation) {
+        $local_id = $recommendation->localId;
+        $owner_id = $recommendation->ownerId;
+        // If it's a global post:
+        if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
+          $recommendation_id = ding_provider_build_entity_id($local_id);
+        }
+        // Else pass along the owner to build the entity id function.
+        else {
+          $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
+        }
+        $response[] = $recommendation_id;
+      }
+    }
+  }
+  ting_visual_relation_json_output($response);
+}
+
+/**
+ * Wrapper function for json output that handles jsonp request if a callback
+ * is supplied. Otherwise it falls back to normal json output.
+ */
+function ting_visual_relation_json_output($response) {
   $callback = $_REQUEST['callback'];
   // If it's a jsonp request with a valid javascript function
   if (isset($callback) && _ting_visual_relation_validate_func_name($callback)) {
-    ting_visual_relation_jsonp_output($response, $callback);
+    $response = drupal_json_encode($response);
+    // $response = _ting_visual_relation_fix_unicode_for_json($response);
+    header('Content-type: text/javascript');
+    echo $callback . '(' . $response . ');';
   }
   // If normal json request or invalid callback: Return normal json as fallback
   else {
     drupal_json_output($response);
   }
-}
-
-/**
- * Return data in JSONP format.
- */
-function ting_visual_relation_jsonp_output($response, $callback) {
-  $response = drupal_json_encode($response);
-  // $response = _ting_visual_relation_fix_unicode_for_json($response);
-  header('Content-type: text/javascript');
-  echo $callback . '(' . $response . ');';
 }
 
 

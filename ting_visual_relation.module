@@ -30,6 +30,15 @@ function ting_visual_relation_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'ting_visual_relation.pages.inc',
   );
+  $items['ting-visual-relation/get-recommendations'] = array(
+    'title' => 'Retrieve recommendations',
+    'description' => 'Used by the relation browser to get recommendations',
+    'page callback' => 'ting_visual_relation_get_recommendations',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ting_visual_relation.pages.inc',
+  );
 
 	return $items;
 }
