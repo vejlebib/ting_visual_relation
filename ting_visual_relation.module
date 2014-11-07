@@ -39,8 +39,29 @@ function ting_visual_relation_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'ting_visual_relation.pages.inc',
   );
+  $items['ting-visual-relation/get-availability'] = array(
+    'title' => 'Get get-availability',
+    'description' => 'Used by the relation browser to get availability information',
+    'page callback' => 'ting_visual_relation_get_availability',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ting_visual_relation.pages.inc',
+  );
 
 	return $items;
+}
+
+/**
+ * Implements hook_ding_provider_user().
+ */
+function ting_visual_relation_ding_provider_user() {
+  return array(
+    'availability' => array(
+      'required' => TRUE,
+      'install time setup' => TRUE,
+    ),
+  );
 }
 
 /**

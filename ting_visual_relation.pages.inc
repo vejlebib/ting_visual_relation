@@ -109,7 +109,7 @@ function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
  * Ajax callback for: ting-visual-relation/get-recommendations
  *
  * @param $count
- *   The number of recommendations to return if possible.
+ *   If possible, this is the number of recommendation that will be returned.
  *   The amount returned may be less than count, but will never exceed it.
  */
 function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count = 3) {
@@ -134,6 +134,34 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
           $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
         }
         $response[] = $recommendation_id;
+      }
+    }
+  }
+  ting_visual_relation_json_output($response);
+}
+
+/**
+ *
+ */
+function ting_visual_relation_get_availability($ding_entity_id = NULL) {
+  $response = array();
+  if (ding_provider_implements('availability', 'items')) {
+    // Extract the local id from the ding entity id.
+    $ding_entity_id = explode(':', $ding_entity_id);
+    // Just to be safe
+    if (isset($ding_entity_id[1])) {
+      $local_id = $ding_entity_id[1];
+      // Get the availability information
+      $info = ding_provider_invoke('availability', 'items', array($local_id));
+      $response = $info[$local_id];
+      // Make sure everything is set.
+      $response += array(
+        'reservable' => FALSE,
+        'available' => FALSE,
+      );
+      // Marks internet resources as available.
+      if (isset($response['is_internet']) && $response['is_internet']) {
+        $response['available'] = TRUE;
       }
     }
   }
