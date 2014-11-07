@@ -109,7 +109,7 @@ function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
  * Ajax callback for: ting-visual-relation/get-recommendations
  *
  * @param $count
- *   The number of recommendations to return. Defaults to 3.
+ *   The max number of recommendations to return. Defaults to 3.
  */
 function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count = 3) {
   $response = array();
