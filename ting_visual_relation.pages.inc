@@ -120,6 +120,26 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
     $object = ting_get_object($ding_entity_id);
     if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
       $identifier = $object->record['dc:identifier']['dkdcplus:ISBN'];
+      $identifier = is_array($identifier) ? $identifier[0] : $identifier;
+      $recommendations = ting_get_object_recommendations($identifier, $count);
+      // Convert to data well 3 PID's
+      foreach ($recommendations as $recommendation) {
+        $local_id = $recommendation->localId;
+        $owner_id = $recommendation->ownerId;
+        // If it's a global post:
+        if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
+          $recommendation_id = ding_provider_build_entity_id($local_id);
+        }
+        // Else pass along the owner to build the entity id function.
+        else {
+          $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
+        }
+        $response[] = $recommendation_id;
+      }
+    }
+    else if (!empty($object->record['dc:identifier']['dkdcplus:ISSN'])) {
+      $identifier = $object->record['dc:identifier']['dkdcplus:ISSN'];
+      $identifier = is_array($identifier) ? $identifier[0] : $identifier;
       $recommendations = ting_get_object_recommendations($identifier, $count);
       // Convert to data well 3 PID's
       foreach ($recommendations as $recommendation) {
