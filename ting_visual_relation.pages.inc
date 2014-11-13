@@ -21,7 +21,6 @@ define('TING_VISUAL_RELATION_GLOBAL_AGENCY', 870970);
 function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
   // Initialise our response array.
   $response = array();
-
   // Only return something if the supplied $ding_entity_id results in a valid
   // object from the datawell. Doing it this way prevents invalid rows in the
   // ting_object table and there's practically no performance overhead since
@@ -50,7 +49,6 @@ function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
   		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
   	}
   }
-
   ting_visual_relation_json_output($response);
 }
 
@@ -115,47 +113,30 @@ function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
 function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count = 3) {
   $response = array();
   // TODO: Implement caching of recommendations and check that first.
-  if (isset($ding_entity_id)) {
-    // For now we will only support object recommendations.
-    $object = ting_get_object($ding_entity_id);
-    ding_adhl_frontend_get_recommended_objects(array($object));
+  if (isset($ding_entity_id) && $object = ting_get_object($ding_entity_id)) {
+    // Get the identifier to pass along to the adhl-webservice.
     if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
       $identifier = $object->record['dc:identifier']['dkdcplus:ISBN'];
-      $identifier = is_array($identifier) ? $identifier[0] : $identifier;
-      $recommendations = ting_get_object_recommendations($identifier, $count);
-      // Convert to data well 3 PID's
-      foreach ($recommendations as $recommendation) {
-        $local_id = $recommendation->localId;
-        $owner_id = $recommendation->ownerId;
-        // If it's a global post:
-        if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
-          $recommendation_id = ding_provider_build_entity_id($local_id);
-        }
-        // Else pass along the owner to build the entity id function.
-        else {
-          $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
-        }
-        $response[] = $recommendation_id;
-      }
+
     }
     else if (!empty($object->record['dc:identifier']['dkdcplus:ISSN'])) {
       $identifier = $object->record['dc:identifier']['dkdcplus:ISSN'];
-      $identifier = is_array($identifier) ? $identifier[0] : $identifier;
-      $recommendations = ting_get_object_recommendations($identifier, $count);
-      // Convert to data well 3 PID's
-      foreach ($recommendations as $recommendation) {
-        $local_id = $recommendation->localId;
-        $owner_id = $recommendation->ownerId;
-        // If it's a global post:
-        if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
-          $recommendation_id = ding_provider_build_entity_id($local_id);
-        }
-        // Else pass along the owner to build the entity id function.
-        else {
-          $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
-        }
-        $response[] = $recommendation_id;
+    }
+    $identifier = is_array($identifier) ? $identifier[0] : $identifier;
+    $recommendations = ting_get_object_recommendations($identifier, $count);
+    // Convert to data well 3 PID's
+    foreach ($recommendations as $recommendation) {
+      $local_id = $recommendation->localId;
+      $owner_id = $recommendation->ownerId;
+      // If it's a global post:
+      if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
+        $recommendation_id = ding_provider_build_entity_id($local_id);
       }
+      // Else pass along the owner to build the entity id function.
+      else {
+        $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
+      }
+      $response[] = $recommendation_id;
     }
   }
   ting_visual_relation_json_output($response);
