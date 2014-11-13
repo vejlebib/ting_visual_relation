@@ -118,6 +118,7 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
   if (isset($ding_entity_id)) {
     // For now we will only support object recommendations.
     $object = ting_get_object($ding_entity_id);
+    ding_adhl_frontend_get_recommended_objects(array($object));
     if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
       $identifier = $object->record['dc:identifier']['dkdcplus:ISBN'];
       $identifier = is_array($identifier) ? $identifier[0] : $identifier;
@@ -193,13 +194,13 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
  * is supplied. Otherwise it falls back to normal json output.
  */
 function ting_visual_relation_json_output($response) {
-  $callback = $_REQUEST['callback'];
   // If it's a jsonp request with a valid javascript function
-  if (isset($callback) && _ting_visual_relation_validate_func_name($callback)) {
-    $response = drupal_json_encode($response);
-    // $response = _ting_visual_relation_fix_unicode_for_json($response);
-    header('Content-type: text/javascript');
-    echo $callback . '(' . $response . ');';
+  if (isset($_REQUEST['callback']) && $callback = $_REQUEST['callback']) {
+    if (_ting_visual_relation_validate_func_name($callback)) {
+      $response = drupal_json_encode($response);
+      header('Content-type: text/javascript');
+      echo $callback . '(' . $response . ');';
+    }
   }
   // If normal json request or invalid callback: Return normal json as fallback
   else {
