@@ -175,13 +175,12 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
  * is supplied. Otherwise it falls back to normal json output.
  */
 function ting_visual_relation_json_output($response) {
+  isset($_REQUEST['callback']) ? $callback = $_REQUEST['callback'] : $callback = FALSE;
   // If it's a jsonp request with a valid javascript function
-  if (isset($_REQUEST['callback']) && $callback = $_REQUEST['callback']) {
-    if (_ting_visual_relation_validate_func_name($callback)) {
-      $response = drupal_json_encode($response);
-      header('Content-type: text/javascript');
-      echo $callback . '(' . $response . ');';
-    }
+  if ($callback && _ting_visual_relation_validate_func_name($callback)) {
+    $response = drupal_json_encode($response);
+    header('Content-type: text/javascript');
+    echo $callback . '(' . $response . ');';
   }
   // If normal json request or invalid callback: Return normal json as fallback
   else {
