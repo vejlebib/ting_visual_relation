@@ -40,9 +40,18 @@ function ting_visual_relation_menu() {
     'file' => 'ting_visual_relation.pages.inc',
   );
   $items['ting-visual-relation/get-availability'] = array(
-    'title' => 'Get get-availability',
+    'title' => 'Get availability',
     'description' => 'Used by the relation browser to get availability information',
     'page callback' => 'ting_visual_relation_get_availability',
+    'page arguments' => array(2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ting_visual_relation.pages.inc',
+  );
+  $items['ting-visual-relation/get-structure'] = array(
+    'title' => 'Get structure',
+    'description' => 'Gets information about the internal structure a data-well object belongs to',
+    'page callback' => 'ting_visual_relation_get_structure',
     'page arguments' => array(2),
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,

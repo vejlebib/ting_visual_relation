@@ -177,6 +177,18 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
 }
 
 /**
+ * Returns information about the internal structure a ting object belongs to.
+ *
+ * Ajax callback for: ting-visual-relation/get-structure
+ */
+function ting_visual_relation_get_structure($ting_object_id = NULL) {
+  $response = array();
+  if (isset($ting_object_id) && $object = ting_get_object($ting_object_id, FALSE, FALSE))  {
+    file_put_contents("/home/drupalpro/debug/debug.txt", print_r($object, TRUE), FILE_APPEND);
+  }
+}
+
+/**
  * Wrapper function for json output that handles jsonp request if a callback
  * is supplied. Otherwise it falls back to normal json output.
  */
