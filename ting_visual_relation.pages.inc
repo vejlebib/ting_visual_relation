@@ -180,13 +180,52 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
 /**
  * Returns information about the internal structure a ting object belongs to.
  *
+ * TODO: This function needs a lot of refactoring.
+ *
  * Ajax callback for: ting-visual-relation/get-structure
  */
 function ting_visual_relation_get_structure($ting_object_id = NULL) {
   $response = array();
-  if (isset($ting_object_id) && $object = ting_get_object($ting_object_id, FALSE, FALSE))  {
-    file_put_contents("/home/drupalpro/debug/debug.txt", print_r($object, TRUE), FILE_APPEND);
+  if (isset($ting_object_id) && $object = ting_get_object($ting_object_id, FALSE, TRUE))  {
+    // TODO: Maybe it's better to use ting object entity??? (ding entity)
+    $type = !empty($object->record['dc:type']['dkdcplus:BibDK-Type']) ? $object->record['dc:type']['dkdcplus:BibDK-Type'] : FALSE;
+    if ($type && is_array($type)) {
+      if (in_array('Avisartikel', $type)) {
+        $data = new stdClass;
+        // Try to get the host-publication
+        $host_object_id = FALSE;
+        foreach ($object->relationsData as $relation) {
+          if ($relation->relationType == 'dbcbib:isPartOfManifestation') {
+            $host_object_id = $relation->relationObject->id;
+            break;
+          }
+        }
+        if ($host_object_id) {
+          $data->host = $host_object_id;
+        }
+        // Try to get the children
+        $children = array();
+        if (!empty($object->record['dcterms:isPartOf'])) {
+          $query = '';
+          foreach ($object->record['dcterms:isPartOf'] as $type => $is_part_of) {
+            if ($type == '') {
+              $query = is_array($is_part_of) ? $is_part_of[0] : $is_part_of;
+              break;
+            }
+          }
+          $result = ting_do_search($query);
+          foreach ($result->collections as $id => $collection) {
+            $children[] = $id;
+          }
+        }
+        if (!empty($children)) {
+          $data->children = $children;
+        }
+        $response = $data;
+      }
+    }
   }
+  ting_visual_relation_json_output($response);
 }
 
 /**
