@@ -122,6 +122,11 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
     else if (!empty($object->record['dc:identifier']['dkdcplus:ISSN'])) {
       $identifier = $object->record['dc:identifier']['dkdcplus:ISSN'];
     }
+    foreach ($identifier as $key => $number) {
+      $identifier[$key] = str_replace(array(' ', '-'), '', $number);
+    }
+    rsort($identifier);
+    // The ADHL-service doesn't like 2 identifiers, so we just pick the first.
     $identifier = is_array($identifier) ? $identifier[0] : $identifier;
     $recommendations = ting_get_object_recommendations($identifier, $count);
     // Convert to data well 3 PID's
@@ -132,7 +137,7 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
       if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
         $recommendation_id = ding_provider_build_entity_id($local_id);
       }
-      // Else pass along the owner to build the entity id function.
+      // Else pass along the owner to the build entity id function.
       else {
         $recommendation_id = ding_provider_build_entity_id($local_id, $owner_id);
       }
