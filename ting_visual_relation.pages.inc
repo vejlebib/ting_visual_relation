@@ -114,6 +114,7 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
   $response = array();
   // TODO: Implement caching of recommendations and check that first.
   if (isset($ding_entity_id) && $object = ting_get_object($ding_entity_id)) {
+    $identifier = array();
     // Get the identifier to pass along to the adhl-webservice.
     if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
       $identifier = $object->record['dc:identifier']['dkdcplus:ISBN'];
