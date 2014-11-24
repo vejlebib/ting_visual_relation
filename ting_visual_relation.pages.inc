@@ -127,9 +127,9 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
       $identifier[$key] = str_replace(array(' ', '-'), '', $number);
     }
     rsort($identifier);
-    // The ADHL-service doesn't like 2 identifiers, so in this case we just
-    // pich the first in the array.
-    $identifier = is_array($identifier) ? $identifier[0] : $identifier;
+    // The ADHL-service doesn't like 2 identifiers. To prevent this we always
+    // pick the first, if the identifier is an array.
+    $identifier = is_array($identifier) ? array_shift($identifier) : $identifier;
     $recommendations = ting_get_object_recommendations($identifier, $count);
     // Convert to data well 3 PID's
     foreach ($recommendations as $recommendation) {
