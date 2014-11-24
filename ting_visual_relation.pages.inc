@@ -12,6 +12,8 @@ module_load_include('client.inc', 'ting');
 
 // The agency used for global posts.
 define('TING_VISUAL_RELATION_GLOBAL_AGENCY', 870970);
+// The default number of search results to return.
+define('TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE', 100);
 
 /**
  * Get data about the ting objects.
@@ -150,7 +152,9 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
 }
 
 /**
+ * Returns information about the availability of a datawell object.
  *
+ * Ajax callback for: ting-visual-relation/get-availability.
  */
 function ting_visual_relation_get_availability($ding_entity_id = NULL) {
   $response = array();
@@ -171,6 +175,37 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
       // Marks internet resources as available.
       if (isset($response['is_internet']) && $response['is_internet']) {
         $response['available'] = TRUE;
+      }
+    }
+  }
+  ting_visual_relation_json_output($response);
+}
+
+/**
+ *
+ */
+function ting_visual_relation_get_search_result($search_engine = NULL, $search_query = '') {
+  $response = array();
+  if (isset($search_engine) ) {
+    $search_engine = str_replace('-', '_', $search_engine);
+    $search_info = search_get_info();
+    $search_info = $search_info[$search_engine];
+    $conditions = $search_info['conditions_callback']($search_query);
+    // Only search if there is a search query supplied or non-empty conditions.
+    // count($conditions > 1) because sort is always set (see ting_search_conditions_callback())
+    if (count($conditions) > 1 || !empty($search_query)) {
+      if (!isset($conditions['size'])) {
+        $conditions['size'] = TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE;
+      }
+      $results = search_data($search_query, $search_info['module'], $conditions);
+      $data = new stdClass;
+      $data->collections = array();
+      if ($search_engine == 'ting_search') {
+        $results = drupal_static('ting_search_results');
+        foreach ($results->collections as $collection) {
+          file_put_contents("/home/drupalpro/debug/debug.txt", print_r($, TRUE), FILE_APPEND);
+          break;
+        }
       }
     }
   }

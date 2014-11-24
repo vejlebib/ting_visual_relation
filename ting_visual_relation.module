@@ -48,6 +48,15 @@ function ting_visual_relation_menu() {
     'type' => MENU_CALLBACK,
     'file' => 'ting_visual_relation.pages.inc',
   );
+  $items['ting-visual-relation/get-search-result'] = array(
+    'title' => 'Get structure',
+    'description' => 'Used by the relation browser to get the results of a search',
+    'page callback' => 'ting_visual_relation_get_search_result',
+    'page arguments' => array(2, 3),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+    'file' => 'ting_visual_relation.pages.inc',
+  );
   $items['ting-visual-relation/get-structure'] = array(
     'title' => 'Get structure',
     'description' => 'Gets information about the internal structure a data-well object belongs to',
