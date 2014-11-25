@@ -187,70 +187,69 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
  *
  * Ajax callback for: ting-visual-relation/get-search-result.
  */
-function ting_visual_relation_get_search_result($search_query = '', $search_engine = NULL) {
+function ting_visual_relation_get_search_result($search_engine = NULL, $search_query = '') {
   $response = array();
-  // Use ting_search as default search engine.
-  if (is_null($search_engine)) {
-    $search_engine = 'ting_search';
-  }
-  $search_engine = str_replace(array('-', ' '), '_', $search_engine);
-  $search_info = search_get_info();
-  if (isset($search_info[$search_engine])) {
-    $search_info = $search_info[$search_engine];
-    $conditions = $search_info['conditions_callback']($search_query);
-    // Only search if there is a search query supplied or non-empty conditions.
-    // Sort is always set so we check for more than 1 condition.
-    if (count($conditions) > 1 || !empty($search_query)) {
-      if (!isset($conditions['size'])) {
-        $conditions['size'] = TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE;
-      }
-      $result = search_data($search_query, $search_info['module'], $conditions);
-      // If the search engine isn't node, there's better ways to get results.
-      if ($search_engine != 'node') {
-        if ($search_engine == 'ting_search') {
-          $result = drupal_static('ting_search_results');
+  if (isset($search_engine)) {
+    $search_engine = str_replace(array('-', ' '), '_', $search_engine);
+    $search_info = search_get_info();
+    // Need a valid search engine to conteniue.
+    if (isset($search_info[$search_engine])) {
+      $search_info = $search_info[$search_engine];
+      $conditions = $search_info['conditions_callback']($search_query);
+      // Only search if there is a search query supplied or non-empty conditions.
+      // Sort is always set so we check for more than 1 condition.
+      if (count($conditions) > 1 || !empty($search_query)) {
+        if (!isset($conditions['size'])) {
+          $conditions['size'] = TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE;
         }
-        else if ($search_engine == 'ting_extrasearch') {
-          $result = drupal_static('ting_extrasearch_results');
-        }
-        $response = new stdClass;
-        // Setup collections if any.
-        if (!empty($result->collections)) {
-          $response->collections = array();
-          foreach ($result->collections as $collection) {
-            $data = new stdClass;
-            if (isset($collection->ding_entity_id)) {
-              $data->pid = $collection->ding_entity_id;
+        $result = search_data($search_query, $search_info['module'], $conditions);
+        // If the search engine isn't node, there's better ways to get results.
+        if ($search_engine != 'node') {
+          if ($search_engine == 'ting_search') {
+            $result = drupal_static('ting_search_results');
+          }
+          else if ($search_engine == 'ting_extrasearch') {
+            $result = drupal_static('ting_extrasearch_results');
+          }
+          $response = new stdClass;
+          // Setup collections if any.
+          if (!empty($result->collections)) {
+            $response->collections = array();
+            foreach ($result->collections as $collection) {
+              $data = new stdClass;
+              if (isset($collection->ding_entity_id)) {
+                $data->pid = $collection->ding_entity_id;
+              }
+              $data->primaryObject = $collection->getPrimary_object()->ding_entity_id;
+              $data->entities = array();
+              foreach ($collection->getEntities() as $entity) {
+                $data->entities[] = $entity->ding_entity_id;
+              }
+              $response->collections[] = $data;
             }
-            $data->primaryObject = $collection->getPrimary_object()->ding_entity_id;
-            $data->entities = array();
-            foreach ($collection->getEntities() as $entity) {
-              $data->entities[] = $entity->ding_entity_id;
+          }
+          // Setup facets if any.
+          if (!empty($result->facets)) {
+            $response->facets = array();
+            foreach ($result->facets as $facet_name => $facet) {
+              $data = new stdClass;
+              $facet_name = explode('.', $facet_name);
+              $data->name = isset($facet_name[1]) ? $facet_name[1] : array_shift($facet_name);
+              $data->terms = array();
+              foreach ($facet->terms as $term_name => $term_count) {
+                $term_data = new stdClass;
+                $term_data->name = $term_name;
+                $term_data->count = $term_count;
+                $data->terms[] = $term_data;
+              }
+              $response->facets[] = $data;
             }
-            $response->collections[] = $data;
           }
         }
-        // Setup facets if any.
-        if (!empty($result->facets)) {
-          $response->facets = array();
-          foreach ($result->facets as $facet_name => $facet) {
-            $data = new stdClass;
-            $facet_name = explode('.', $facet_name);
-            $data->name = isset($facet_name[1]) ? $facet_name[1] : array_shift($facet_name);
-            $data->terms = array();
-            foreach ($facet->terms as $term_name => $term_count) {
-              $term_data = new stdClass;
-              $term_data->name = $term_name;
-              $term_data->count = $term_count;
-              $data->terms[] = $term_data;
-            }
-            $response->facets[] = $data;
-          }
-        }
-      }
-      // TODO: Handle node search.
-      else {
+        // TODO: Handle node search.
+        else {
 
+        }
       }
     }
   }
