@@ -158,7 +158,7 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
  */
 function ting_visual_relation_get_availability($ding_entity_id = NULL) {
   $response = array();
-  if (ding_provider_implements('availability', 'items')) {
+  if (ding_provider_implements('availability', 'items') && isset($ding_entity_id)) {
     // Extract the local id from the ding entity id.
     $ding_entity_id = explode(':', $ding_entity_id);
     // Just to be safe
