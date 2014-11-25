@@ -32,20 +32,23 @@ function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
     // Populate response-array with simple properties.
     $properties = _ting_visual_relation_ting_object_properties();
     foreach ($properties as $getter => $property) {
-      if ($values = $ding_entity->{$getter}) {
+      if (isset($ding_entity->{$getter})) {
+        $values = $ding_entity->{$getter};
         $values = is_array($values) ? $values : array($values);
         foreach ($values as $value) {
           $response[] = _ting_visual_relation_property_value_object($property, $value);
         }
       }
     }
-    // Populate response-array with relations.
-  	foreach ($ding_entity->relations as $relation) {
-      $value = $relation->object->ding_entity_id;
-      $data = _ting_visual_relation_property_value_object('relation', $value);
-      $data->type = $relation->type;
-  		$response[] = $data;
-  	}
+    // Populate response-array with relations if any.
+    if (!empty($ding_entity->relations)) {
+    	foreach ($ding_entity->relations as $relation) {
+        $value = $relation->object->ding_entity_id;
+        $data = _ting_visual_relation_property_value_object('relation', $value);
+        $data->type = $relation->type;
+    		$response[] = $data;
+    	}
+    }
     // Populate response-array with cover url if possible.
   	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
   		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
@@ -220,7 +223,7 @@ function ting_visual_relation_get_search_result($search_engine = NULL, $search_q
               if (isset($collection->ding_entity_id)) {
                 $data->pid = $collection->ding_entity_id;
               }
-              $data->primaryObject = $collection->getPrimary_object()->ding_entity_id;
+              $data->primaryObject = $collection->primary_object->ding_entity_id;
               $data->entities = array();
               foreach ($collection->getEntities() as $entity) {
                 $data->entities[] = $entity->ding_entity_id;
