@@ -199,8 +199,7 @@ function ting_visual_relation_get_search_result($search_query = '', $search_engi
     $search_info = $search_info[$search_engine];
     $conditions = $search_info['conditions_callback']($search_query);
     // Only search if there is a search query supplied or non-empty conditions.
-    // We use count($conditions > 1) because sort is always set (see
-    // ting_search_conditions_callback()).
+    // Sort is always set so we check for more than 1 condition
     if (count($conditions) > 1 || !empty($search_query)) {
       if (!isset($conditions['size'])) {
         $conditions['size'] = TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE;
