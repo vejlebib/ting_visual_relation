@@ -220,8 +220,8 @@ function ting_visual_relation_get_search_result($search_engine = NULL, $search_q
             $response->collections = array();
             foreach ($result->collections as $collection) {
               $data = new stdClass;
-              $data->pid = $collection->ding_entity_id;
-              $data->primaryObject = $collection->primary_object->ding_entity_id;
+              $data->pid = $collection->id;
+              $data->primaryObject = $collection->primary_object->id;
               $data->entities = array();
               foreach ($collection->getEntities() as $entity) {
                 $data->entities[] = $entity->ding_entity_id;
