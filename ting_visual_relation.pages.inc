@@ -211,32 +211,38 @@ function ting_visual_relation_get_search_result($search_engine = NULL, $search_q
           $result = drupal_static('ting_extrasearch_results');
         }
         $response = new stdClass;
-        $response->collections = array();
-        // Setup data-objects with selected info for each collection in result.
-        foreach ($result->collections as $collection) {
-          $data = new stdClass;
-          $data->pid = $collection->ding_entity_id;
-          $data->primaryObject = $collection->getPrimary_object()->ding_entity_id;
-          $data->entities = array();
-          foreach ($collection->getEntities() as $entity) {
-            $data->entities[] = $entity->ding_entity_id;
+        // Setup collections if any.
+        if (!empty($result->collections)) {
+          $response->collections = array();
+          foreach ($result->collections as $collection) {
+            $data = new stdClass;
+            if (isset($collection->ding_entity_id)) {
+              $data->pid = $collection->ding_entity_id;
+            }
+            $data->primaryObject = $collection->getPrimary_object()->ding_entity_id;
+            $data->entities = array();
+            foreach ($collection->getEntities() as $entity) {
+              $data->entities[] = $entity->ding_entity_id;
+            }
+            $response->collections[] = $data;
           }
-          $response->collections[] = $data;
         }
-        $response->facets = array();
-        // Setup data-objects with selected info for each facet in result.
-        foreach ($result->facets as $facet_name => $facet) {
-          $data = new stdClass;
-          $facet_name = explode('.', $facet_name);
-          $data->name = isset($facet_name[1]) ? $facet_name[1] : array_shift($facet_name);
-          $data->terms = array();
-          foreach ($facet->terms as $term_name => $term_count) {
-            $term_data = new stdClass;
-            $term_data->name = $term_name;
-            $term_data->count = $term_count;
-            $data->terms[] = $term_data;
+        // Setup facets if any.
+        if (!empty($result->facets)) {
+          $response->facets = array();
+          foreach ($result->facets as $facet_name => $facet) {
+            $data = new stdClass;
+            $facet_name = explode('.', $facet_name);
+            $data->name = isset($facet_name[1]) ? $facet_name[1] : array_shift($facet_name);
+            $data->terms = array();
+            foreach ($facet->terms as $term_name => $term_count) {
+              $term_data = new stdClass;
+              $term_data->name = $term_name;
+              $term_data->count = $term_count;
+              $data->terms[] = $term_data;
+            }
+            $response->facets[] = $data;
           }
-          $response->facets[] = $data;
         }
       }
       // TODO: Handle node search.
