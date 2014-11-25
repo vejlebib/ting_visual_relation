@@ -182,30 +182,66 @@ function ting_visual_relation_get_availability($ding_entity_id = NULL) {
 }
 
 /**
+ * Returns the search result for the specified engine and query in a well
+ * structured json array.
  *
+ * Ajax callback for: ting-visual-relation/get-search-result.
  */
 function ting_visual_relation_get_search_result($search_engine = NULL, $search_query = '') {
   $response = array();
   if (isset($search_engine) ) {
-    $search_engine = str_replace('-', '_', $search_engine);
+    $search_engine = str_replace(array('-', ' '), '_', $search_engine);
     $search_info = search_get_info();
     $search_info = $search_info[$search_engine];
     $conditions = $search_info['conditions_callback']($search_query);
     // Only search if there is a search query supplied or non-empty conditions.
-    // count($conditions > 1) because sort is always set (see ting_search_conditions_callback())
+    // We use count($conditions > 1) because sort is always set (see
+    // ting_search_conditions_callback()).
     if (count($conditions) > 1 || !empty($search_query)) {
       if (!isset($conditions['size'])) {
         $conditions['size'] = TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE;
       }
-      $results = search_data($search_query, $search_info['module'], $conditions);
-      $data = new stdClass;
-      $data->collections = array();
-      if ($search_engine == 'ting_search') {
-        $results = drupal_static('ting_search_results');
-        foreach ($results->collections as $collection) {
-          file_put_contents("/home/drupalpro/debug/debug.txt", print_r($, TRUE), FILE_APPEND);
-          break;
+      $result = search_data($search_query, $search_info['module'], $conditions);
+      // If the search engine isn't node, there's better ways to get results.
+      if ($search_engine != 'node') {
+        if ($search_engine == 'ting_search') {
+          $result = drupal_static('ting_search_results');
         }
+        else if ($search_engine == 'ting_extrasearch') {
+          $result = drupal_static('ting_extrasearch_results');
+        }
+        $response = new stdClass;
+        $response->collections = array();
+        // Setup data-objects with selected info for each collection in result.
+        foreach ($result->collections as $collection) {
+          $data = new stdClass;
+          $data->pid = $collection->ding_entity_id;
+          $data->primaryObject = $collection->getPrimary_object()->ding_entity_id;
+          $data->entities = array();
+          foreach ($collection->getEntities() as $entity) {
+            $data->entities[] = $entity->ding_entity_id;
+          }
+          $response->collections[] = $data;
+        }
+        $response->facets = array();
+        // Setup data-objects with selected info for each facet in result.
+        foreach ($result->facets as $facet_name => $facet) {
+          $data = new stdClass;
+          $facet_name = explode('.', $facet_name);
+          $data->name = isset($facet_name[1]) ? $facet_name[1] : array_shift($facet_name);
+          $data->terms = array();
+          foreach ($facet->terms as $term_name => $term_count) {
+            $term_data = new stdClass;
+            $term_data->name = $term_name;
+            $term_data->count = $term_count;
+            $data->terms[] = $term_data;
+          }
+          $response->facets[] = $data;
+        }
+      }
+      // TODO: Handle node search.
+      else {
+
       }
     }
   }
