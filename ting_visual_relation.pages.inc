@@ -18,6 +18,8 @@ define('TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE', 100);
 /**
  * Get data about the ting objects.
  *
+ * The data is returned to Javascript as simple property-value objects.
+ *
  * Ajax callback for: ting-visual-relation/get-ting-object
  */
 function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
@@ -32,7 +34,7 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
     // so we use that to load the entity (ding_entity_load).
     // We could have used the ting object directly, but the ting entity has
     // methods for easy retrieval of data.
-    $ting_entity = ding_entity_load($ding_entity_id);
+    $ting_entity = ding_entity_load($ting_object_pid);
     // Populate response-array with simple properties.
     $properties = _ting_visual_relation_ting_object_properties();
     foreach ($properties as $getter => $property) {
@@ -40,14 +42,25 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
         $values = $ting_entity->{$getter};
         $values = is_array($values) ? $values : array($values);
         foreach ($values as $value) {
-          $response[] = _ting_visual_relation_property_value_object($property, $value);
+          // Filter out FALSE and empty values.
+          if (!empty($value)) {
+            $response[] = _ting_visual_relation_property_value_object($property, $value);
+          }
         }
       }
     }
     // Populate response-array with relations if any.
     if (!empty($ting_entity->relations)) {
     	foreach ($ting_entity->relations as $relation) {
-        $value = $relation->object->ding_entity_id;
+        $value = NULL;
+        // Some relations have a URI for online access.
+        if (isset($relation->uri)) {
+          $value = $relation->uri;
+        }
+        // Otherwise use PID as value for the relation.
+        else if (is_object($relation->object)) {
+          $value = $relation->object->ding_entity_id;
+        }
         $data = _ting_visual_relation_property_value_object('relation', $value);
         $data->type = $relation->type;
     		$response[] = $data;
@@ -57,6 +70,10 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
   	if ($cover_url = ting_visual_relation_get_cover_url($ting_entity)) {
   		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
   	}
+    // TODO: Populate response with docbook properties if available.
+    if (!empty($ting_entity->reply->formatsAvailable)) {
+      $formats = $ting_entity->reply->formatsAvailable;
+    }
   }
   ting_visual_relation_json_output($response);
 }
@@ -70,10 +87,26 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
 function _ting_visual_relation_ting_object_properties() {
   return array(
     'id' => 'id',
+    'localId' => 'localId',
+    'ownerId' => 'ownerId',
     'title' => 'title',
+    'description' => 'description',
+    'abstract' => 'abstract',
     'creators' => 'creator',
     'subjects' => 'subject',
     'type' => 'type',
+    'isPartOf' => 'isPartOf',
+    'isbn' => 'isbn',
+    'serieNumber' => 'serieNumber',
+    'serieTitle' => 'serieTitle',
+    'serieDescription' => 'serieDescription',
+    'language' => 'language',
+    'date' => 'date',
+    'online_url' => 'onlineUrl',
+    'ac_source' => 'acSource',
+    'contributers' => 'contributer',
+    'extent' => 'extent',
+    'classification' => 'classification',
   );
 }
 
