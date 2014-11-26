@@ -20,20 +20,24 @@ define('TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE', 100);
  *
  * Ajax callback for: ting-visual-relation/get-ting-object
  */
-function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
-  // Initialise our response array.
+function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
   $response = array();
   // Only return something if the supplied $ding_entity_id results in a valid
   // object from the datawell. Doing it this way prevents invalid rows in the
   // ting_object table and there's practically no performance overhead since
   // ting_get_object caches the result.
-  if (isset($ding_entity_id) && ting_get_object($ding_entity_id)) {
-    $ding_entity = ding_entity_load($ding_entity_id);
+  if (isset($ting_object_pid) && ting_get_object($ting_object_pid)) {
+    // Get a Drupal entity (ting entity) that wraps the datawell object. The
+    // ding_entity module has a common API for all DDB CMS specific entities,
+    // so we use that to load the entity (ding_entity_load).
+    // We could have used the ting object directly, but the ting entity has
+    // methods for easy retrieval of data.
+    $ting_entity = ding_entity_load($ding_entity_id);
     // Populate response-array with simple properties.
     $properties = _ting_visual_relation_ting_object_properties();
     foreach ($properties as $getter => $property) {
-      if (isset($ding_entity->{$getter})) {
-        $values = $ding_entity->{$getter};
+      if (isset($ting_entity->{$getter})) {
+        $values = $ting_entity->{$getter};
         $values = is_array($values) ? $values : array($values);
         foreach ($values as $value) {
           $response[] = _ting_visual_relation_property_value_object($property, $value);
@@ -41,8 +45,8 @@ function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
       }
     }
     // Populate response-array with relations if any.
-    if (!empty($ding_entity->relations)) {
-    	foreach ($ding_entity->relations as $relation) {
+    if (!empty($ting_entity->relations)) {
+    	foreach ($ting_entity->relations as $relation) {
         $value = $relation->object->ding_entity_id;
         $data = _ting_visual_relation_property_value_object('relation', $value);
         $data->type = $relation->type;
@@ -50,7 +54,7 @@ function ting_visual_relation_get_ting_object($ding_entity_id = NULL) {
     	}
     }
     // Populate response-array with cover url if possible.
-  	if ($cover_url = ting_visual_relation_get_cover_url($ding_entity)) {
+  	if ($cover_url = ting_visual_relation_get_cover_url($ting_entity)) {
   		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
   	}
   }
@@ -200,7 +204,7 @@ function ting_visual_relation_get_search_result($search_engine = NULL, $search_q
       $search_info = $search_info[$search_engine];
       $conditions = $search_info['conditions_callback']($search_query);
       // Only search if there is a search query supplied or non-empty conditions.
-      // Sort is always set so we check for more than 1 condition.
+      // Sort is always set, so we check for more than 1 condition.
       if (count($conditions) > 1 || !empty($search_query)) {
         if (!isset($conditions['size'])) {
           $conditions['size'] = TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE;
