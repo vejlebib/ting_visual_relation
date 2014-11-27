@@ -9,6 +9,7 @@ dependencies[] = search
 dependencies[] = ting
 dependencies[] = ting_covers
 dependencies[] = ting_search
+dependencies[] = ting_fulltext
 dependencies[] = ding_ting_frontend
 files[] = ting_visual_relation.module
 features[features_api][] = api:2
