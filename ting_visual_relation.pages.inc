@@ -35,6 +35,7 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
     // We could have used the ting object directly, but the ting entity has
     // methods for easy retrieval of data.
     $ting_entity = ding_entity_load($ting_object_pid);
+
     // Populate response-array with simple properties.
     $properties = _ting_visual_relation_ting_object_properties();
     foreach ($properties as $getter => $property) {
@@ -49,7 +50,8 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
         }
       }
     }
-    // Populate response-array with relations if any.
+
+    // - with relations if any.
     if (!empty($ting_entity->relations)) {
     	foreach ($ting_entity->relations as $relation) {
         $value = NULL;
@@ -66,14 +68,42 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
     		$response[] = $data;
     	}
     }
-    // Populate response-array with cover url if possible.
+
+    // - with cover url if possible.
   	if ($cover_url = ting_visual_relation_get_cover_url($ting_entity)) {
   		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
   	}
-    // TODO: Populate response with docbook properties if available.
-    if (!empty($ting_entity->reply->formatsAvailable)) {
-      $formats = $ting_entity->reply->formatsAvailable;
+
+    // - with docbook properties if available.
+    if (!empty($ting_entity->reply->formatsAvailable) && in_array('docbook', $ting_entity->reply->formatsAvailable)) {
+      module_load_include('inc', 'ting_fulltext', 'includes/ting_fulltext.pages');
+      // Get docbook-format data from the datawell.
+      $docbook = ting_fulltext_parse(ting_fulltext_object_load($ting_entity->id));
+      $value = array();
+      if (isset($docbook['title'])) {
+        $value[] = _ting_visual_relation_property_value_object('title', $docbook['title']);
+      }
+      $creator = isset($docbook['surname']) ? $docbook['surname'] . ', ' : '';
+      $creator .= isset($docbook['firstname']) ? $docbook['firstname'] : '';
+      if (!empty($creator)) {
+        $value[] = _ting_visual_relation_property_value_object('creator', $creator);
+      }
+      if (isset($docbook['subject'])) {
+        foreach ($docbook['subject'] as $subject) {
+          $value[] = _ting_visual_relation_property_value_object('subject', $subject);
+        }
+      }
+      if (isset($docbook['section'])) {
+        foreach ($docbook['section'] as $section) {
+          $section_data = array();
+          $section_data[] = _ting_visual_relation_property_value_object('title', $section['title']);
+          $section_data[] = _ting_visual_relation_property_value_object('text', $section['para']);
+          $value[] = _ting_visual_relation_property_value_object('section', $section_data);
+        }
+      }
+      $response[] = _ting_visual_relation_property_value_object('docbook', $value);
     }
+
   }
   ting_visual_relation_json_output($response);
 }
