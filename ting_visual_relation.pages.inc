@@ -16,28 +16,27 @@ define('TING_VISUAL_RELATION_GLOBAL_AGENCY', 870970);
 define('TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE', 100);
 
 /**
- * Get data about the ting objects.
- *
+ * Returns a json array with data for the ting object with the specified PID.
  * The data is returned to Javascript as simple property-value objects.
  *
  * Ajax callback for: ting-visual-relation/get-ting-object
  */
-function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
+function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
   $response = array();
-  // Only return something if the supplied $ding_entity_id results in a valid
+  // Only return something if the supplied $datawell_pid results in a valid
   // object from the datawell. Doing it this way prevents invalid rows in the
   // ting_object table and there's practically no performance overhead since
   // ting_get_object caches the result.
-  if (isset($ting_object_pid) && ting_get_object($ting_object_pid)) {
+  if (isset($datawell_pid) && ting_get_object($datawell_pid)) {
     // Get a Drupal entity (ting entity) that wraps the datawell object. The
     // ding_entity module has a common API for all DDB CMS specific entities,
-    // so we use that to load the entity (ding_entity_load).
+    // so we use that to load the entity (ding_entity_load()).
     // We could have used the ting object directly, but the ting entity has
     // methods for easy retrieval of data.
-    $ting_entity = ding_entity_load($ting_object_pid);
+    $ting_entity = ding_entity_load($datawell_pid);
 
     // Populate response-array with simple properties.
-    $properties = _ting_visual_relation_ting_object_properties();
+    $properties = _ting_visual_relation_ting_entity_properties();
     foreach ($properties as $getter => $property) {
       if (isset($ting_entity->{$getter})) {
         $values = $ting_entity->{$getter};
@@ -74,34 +73,34 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
   		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
   	}
 
-    // - with docbook properties if available.
+    // - with fulltext if available.
     if (!empty($ting_entity->reply->formatsAvailable) && in_array('docbook', $ting_entity->reply->formatsAvailable)) {
       module_load_include('inc', 'ting_fulltext', 'includes/ting_fulltext.pages');
-      // Get docbook-format data from the datawell.
-      $docbook = ting_fulltext_parse(ting_fulltext_object_load($ting_entity->id));
+      // Get the fulltext data from the datawell.
+      $fulltext = ting_fulltext_parse(ting_fulltext_object_load($ting_entity->id));
       $value = array();
-      if (isset($docbook['title'])) {
-        $value[] = _ting_visual_relation_property_value_object('title', $docbook['title']);
+      if (isset($fulltext['title'])) {
+        $value[] = _ting_visual_relation_property_value_object('title', $fulltext['title']);
       }
-      $creator = isset($docbook['surname']) ? $docbook['surname'] . ', ' : '';
-      $creator .= isset($docbook['firstname']) ? $docbook['firstname'] : '';
+      $creator = isset($fulltext['surname']) ? $fulltext['surname'] . ', ' : '';
+      $creator .= isset($fulltext['firstname']) ? $fulltext['firstname'] : '';
       if (!empty($creator)) {
         $value[] = _ting_visual_relation_property_value_object('creator', $creator);
       }
-      if (isset($docbook['subject'])) {
-        foreach ($docbook['subject'] as $subject) {
+      if (isset($fulltext['subject'])) {
+        foreach ($fulltext['subject'] as $subject) {
           $value[] = _ting_visual_relation_property_value_object('subject', $subject);
         }
       }
-      if (isset($docbook['section'])) {
-        foreach ($docbook['section'] as $section) {
-          $section_data = array();
-          $section_data[] = _ting_visual_relation_property_value_object('title', $section['title']);
-          $section_data[] = _ting_visual_relation_property_value_object('text', $section['para']);
-          $value[] = _ting_visual_relation_property_value_object('section', $section_data);
+      if (!empty($fulltext['section'])) {
+        foreach ($fulltext['section'] as $section) {
+          $section_value = array();
+          $section_value[] = _ting_visual_relation_property_value_object('title', $section['title']);
+          $section_value[] = _ting_visual_relation_property_value_object('text', $section['para']);
+          $value[] = _ting_visual_relation_property_value_object('section', $section_value);
         }
       }
-      $response[] = _ting_visual_relation_property_value_object('docbook', $value);
+      $response[] = _ting_visual_relation_property_value_object('fulltext', $value);
     }
 
   }
@@ -109,12 +108,13 @@ function ting_visual_relation_get_ting_object($ting_object_pid = NULL) {
 }
 
 /**
- * Helper-function to hold the simple ting_object properties we return.
+ * Helper-function to hold the Ting entity properties we return.
+ * Some properties requires special handling, and are therefor not inc. here.
  *
  * @return $properties
  *   An array with property getter-method as key and property name as value.
  */
-function _ting_visual_relation_ting_object_properties() {
+function _ting_visual_relation_ting_entity_properties() {
   return array(
     'id' => 'id',
     'localId' => 'localId',
