@@ -240,14 +240,14 @@ function ting_visual_relation_get_recommendations($datawell_pid = NULL, $count =
  *
  * Ajax callback for: ting-visual-relation/get-availability.
  */
-function ting_visual_relation_get_availability($ding_entity_id = NULL) {
+function ting_visual_relation_get_availability($datawell_pid = NULL) {
   $response = array();
-  if (ding_provider_implements('availability', 'items') && isset($ding_entity_id)) {
-    // Extract the local id from the ding entity id.
-    $ding_entity_id = explode(':', $ding_entity_id);
-    // Just to be safe
-    if (isset($ding_entity_id[1])) {
-      $local_id = $ding_entity_id[1];
+  if (ding_provider_implements('availability', 'items') && isset($datawell_pid)) {
+    // Extract the local id from the PID.
+    $datawell_pid = explode(':', $datawell_pid);
+    // Make sure the local-id of the PID is set.
+    if (isset($datawell_pid[1])) {
+      $local_id = $datawell_pid[1];
       // Get the availability information
       $info = ding_provider_invoke('availability', 'items', array($local_id));
       $response = $info[$local_id];
