@@ -196,10 +196,10 @@ function _ting_visual_relation_property_value_object($property, $value) {
  *   If possible, this is the number of recommendation that will be returned.
  *   The amount returned may be less than count, but will never exceed it.
  */
-function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count = 3) {
+function ting_visual_relation_get_recommendations($datawell_pid = NULL, $count = 3) {
   $response = array();
   // TODO: Implement caching of recommendations and check that first.
-  if (isset($ding_entity_id) && $object = ting_get_object($ding_entity_id)) {
+  if (isset($ding_entity_id) && $object = ting_get_object($datawell_pid)) {
     $identifier = array();
     // Get the identifier to pass along to the adhl-webservice.
     if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
@@ -217,11 +217,11 @@ function ting_visual_relation_get_recommendations($ding_entity_id = NULL, $count
     // pick the first, if the identifier is an array.
     $identifier = is_array($identifier) ? array_shift($identifier) : $identifier;
     $recommendations = ting_get_object_recommendations($identifier, $count);
-    // Convert to data well 3 PID's
+    // Convert to datawell PID's
     foreach ($recommendations as $recommendation) {
       $local_id = $recommendation->localId;
       $owner_id = $recommendation->ownerId;
-      // If it's a global post:
+      // If it's a global post
       if ($owner_id == TING_VISUAL_RELATION_GLOBAL_AGENCY) {
         $recommendation_id = ding_provider_build_entity_id($local_id);
       }
