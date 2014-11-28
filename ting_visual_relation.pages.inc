@@ -3,7 +3,7 @@
 /**
  * @file
  *
- * Defines forms and page callbacks for the Ting visual relation module.
+ * Defines page and AJAX callbacks for the Ting visual relation module.
  */
 
 // Load additianal includes for its helper functions
@@ -16,13 +16,25 @@ define('TING_VISUAL_RELATION_GLOBAL_AGENCY', 870970);
 define('TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE', 100);
 
 /**
- * Returns a json array with data for the ting object with the specified PID.
- * The data is returned to Javascript as simple property-value objects.
- *
- * Ajax callback for: ting-visual-relation/get-ting-object
+ * Returns data in json format for a single ting object.
  */
 function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
-  $response = array();
+  $response = ting_visual_relation_get_ting_object_array($datawell_pid);
+  ting_visual_relation_json_output($response);
+}
+
+/**
+ * Returns an array with data for the ting object with the specified PID. The
+ * array is populated with property-value objects describing the ting object.
+ *
+ * @param  $datawell_pid
+ *   The datawell PID for the ting object.
+ * @return  $return
+ *   An array with data for the ting object.
+ *   An empty array if the supplied PID didn't result in a valid object.
+ */
+function ting_visual_relation_get_ting_object_array($datawell_pid) {
+  $return = array();
   // Only return something if the supplied $datawell_pid results in a valid
   // object from the datawell. Doing it this way prevents invalid rows in the
   // ting_object table and there's practically no performance overhead since
@@ -44,7 +56,7 @@ function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
         foreach ($values as $value) {
           // Filter out FALSE and empty values.
           if (!empty($value)) {
-            $response[] = _ting_visual_relation_property_value_object($property, $value);
+            $return[] = _ting_visual_relation_property_value_object($property, $value);
           }
         }
       }
@@ -52,7 +64,7 @@ function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
 
     // - with relations if any.
     if (!empty($ting_entity->relations)) {
-    	foreach ($ting_entity->relations as $relation) {
+      foreach ($ting_entity->relations as $relation) {
         $value = NULL;
         // Some relations have a URI for online access.
         if (isset($relation->uri)) {
@@ -64,14 +76,14 @@ function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
         }
         $data = _ting_visual_relation_property_value_object('relation', $value);
         $data->type = $relation->type;
-    		$response[] = $data;
-    	}
+        $return[] = $data;
+      }
     }
 
     // - with cover url if possible.
-  	if ($cover_url = ting_visual_relation_get_cover_url($ting_entity)) {
-  		$response[] = _ting_visual_relation_property_value_object('cover', $cover_url);
-  	}
+    if ($cover_url = ting_visual_relation_get_cover_url($ting_entity)) {
+      $return[] = _ting_visual_relation_property_value_object('cover', $cover_url);
+    }
 
     // - with fulltext if available.
     if (!empty($ting_entity->reply->formatsAvailable) && in_array('docbook', $ting_entity->reply->formatsAvailable)) {
@@ -100,11 +112,10 @@ function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
           $value[] = _ting_visual_relation_property_value_object('section', $section_value);
         }
       }
-      $response[] = _ting_visual_relation_property_value_object('fulltext', $value);
+      $return[] = _ting_visual_relation_property_value_object('fulltext', $value);
     }
-
   }
-  ting_visual_relation_json_output($response);
+  return $return;
 }
 
 /**
@@ -162,15 +173,15 @@ function _ting_visual_relation_property_value_object($property, $value) {
  *
  * Ajax callback for: ting-visual-relation/get-ting-collection
  */
-function ting_visual_relation_get_ting_collection($ding_entity_id = NULL) {
+function ting_visual_relation_get_ting_collection($datawell_pid = NULL) {
   $response = array();
-  if (isset($ding_entity_id) && ting_get_object($ding_entity_id, TRUE)) {
-    $ding_entity_collection = ding_entity_collection_load($ding_entity_id);
-    foreach ($ding_entity_collection->entities as $ding_entity) {
-      $response[] = $ding_entity->id;
+  if (isset($datawell_pid) && ting_get_object($datawell_pid, TRUE)) {
+    $ting_collection = ding_entity_collection_load($datawell_pid);
+    foreach ($ting_collection->entities as $ting_entity) {
+      ting_visual_relation_get_ting_object($ting_entity->id);
     }
   }
-  ting_visual_relation_json_output($response);
+  //ting_visual_relation_json_output($response);
 }
 
 /**
