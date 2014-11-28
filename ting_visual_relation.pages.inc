@@ -16,10 +16,29 @@ define('TING_VISUAL_RELATION_GLOBAL_AGENCY', 870970);
 define('TING_VISUAL_RELATION_DEFAULT_SEARCH_SIZE', 100);
 
 /**
- * Returns data in json format for a single ting object.
+ * Outputs data in json format for the ting object with the datawell PID.
+ *
+ * AJAX callback for /ting-visual-relation/get-ting-object
  */
 function ting_visual_relation_get_ting_object($datawell_pid = NULL) {
   $response = ting_visual_relation_get_ting_object_array($datawell_pid);
+  ting_visual_relation_json_output($response);
+}
+
+/**
+ * Outputs data in json format for every ting object in the collection with the
+ * specified datawell PID.
+ *
+ * Ajax callback for: ting-visual-relation/get-ting-collection
+ */
+function ting_visual_relation_get_ting_collection($datawell_pid = NULL) {
+  $response = array();
+  if (isset($datawell_pid) && ting_get_object($datawell_pid, TRUE)) {
+    $ting_collection = ding_entity_collection_load($datawell_pid);
+    foreach ($ting_collection->entities as $ting_entity) {
+      $response[] = ting_visual_relation_get_ting_object_array($ting_entity->id);
+    }
+  }
   ting_visual_relation_json_output($response);
 }
 
@@ -166,22 +185,6 @@ function _ting_visual_relation_property_value_object($property, $value) {
   $data->property = $property;
   $data->value = $value;
   return $data;
-}
-
-/**
- * Get data about the ting collections.
- *
- * Ajax callback for: ting-visual-relation/get-ting-collection
- */
-function ting_visual_relation_get_ting_collection($datawell_pid = NULL) {
-  $response = array();
-  if (isset($datawell_pid) && ting_get_object($datawell_pid, TRUE)) {
-    $ting_collection = ding_entity_collection_load($datawell_pid);
-    foreach ($ting_collection->entities as $ting_entity) {
-      ting_visual_relation_get_ting_object($ting_entity->id);
-    }
-  }
-  //ting_visual_relation_json_output($response);
 }
 
 /**
