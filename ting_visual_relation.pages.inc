@@ -199,7 +199,7 @@ function _ting_visual_relation_property_value_object($property, $value) {
 function ting_visual_relation_get_recommendations($datawell_pid = NULL, $count = 3) {
   $response = array();
   // TODO: Implement caching of recommendations and check that first.
-  if (isset($ding_entity_id) && $object = ting_get_object($datawell_pid)) {
+  if (isset($datawell_pid) && $object = ting_get_object($datawell_pid)) {
     $identifier = array();
     // Get the identifier to pass along to the adhl-webservice.
     if (!empty($object->record['dc:identifier']['dkdcplus:ISBN'])) {
@@ -430,7 +430,7 @@ function ting_visual_relation_get_cover_url($ding_entity) {
   // Don't do anything if the cover is a known negative.
   if (!cache_get('ting_covers:' . $localId)) {
     $path = ting_covers_object_path($localId);
-    // If the cover is allready saved locally, just use that.
+    // If the cover is already saved locally, just use that.
     if (file_exists($path)) {
       $cover_url = file_create_url($path);
     }
