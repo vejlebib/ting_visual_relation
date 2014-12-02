@@ -3,7 +3,6 @@ description = Implements a Visual relation browser in DDB CMS.
 package = Ding!
 core = 7.x
 version = 7.x-0.2.0
-dependencies[] = search
 dependencies[] = virtual_field
 dependencies[] = features
 dependencies[] = d3
