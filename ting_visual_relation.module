@@ -141,8 +141,22 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
 
 /**
  * Implements hook_process_ting_object().
+ *
+ * Try to place our field on the ting object without destroying the order.
+ * This is needed because the hook_preprocess_ting_object() in the template.php
+ * of the DDBasic theme is messing up the field_groups.
  */
 function ting_visual_relation_process_ting_object(&$vars) {
-
+  $content = &$vars['content'];
+  $field['field_ting_visual_relations'] = $content['field_ting_visual_relations'];
+  unset($content['field_ting_visual_relations']);
+  // Look for the right column to place our field in.
+  if (!empty($content['ting-object']['content']['right_column'])) {
+    // Try to position field right after the author field.
+    $author_weight = $content['ting-object']['content']['right_column']['ting_author']['#weight'];
+    $field['field_ting_visual_relations']['#weight'] = ++$author_weight;
+    $content['ting-object']['content']['right_column'] += $field;
+  }
+  // TODO: Try to put it somewhere else if there's no right column.
 }
 
