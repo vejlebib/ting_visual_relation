@@ -148,14 +148,16 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
  */
 function ting_visual_relation_process_ting_object(&$vars) {
   $content = &$vars['content'];
-  $field['field_ting_visual_relations'] = $content['field_ting_visual_relations'];
-  unset($content['field_ting_visual_relations']);
-  // Look for the right column to place our field in.
-  if (!empty($content['ting-object']['content']['right_column'])) {
-    // Try to position field right after the author field.
-    $author_weight = $content['ting-object']['content']['right_column']['ting_author']['#weight'];
-    $field['field_ting_visual_relations']['#weight'] = ++$author_weight;
-    $content['ting-object']['content']['right_column'] += $field;
+  if (isset($content['field_ting_visual_relations'])) {
+    $field['field_ting_visual_relations'] = $content['field_ting_visual_relations'];
+    unset($content['field_ting_visual_relations']);
+    // Look for the right column to place our field in.
+    if (!empty($content['ting-object']['content']['right_column'])) {
+      // Try to position field right after the author field.
+      $author_weight = $content['ting-object']['content']['right_column']['ting_author']['#weight'];
+      $field['field_ting_visual_relations']['#weight'] = ++$author_weight;
+      $content['ting-object']['content']['right_column'] += $field;
+    }
   }
   // TODO: Try to put it somewhere else if there's no right column.
 }
