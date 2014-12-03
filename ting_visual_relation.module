@@ -151,14 +151,24 @@ function ting_visual_relation_process_ting_object(&$vars) {
   if (isset($content['field_ting_visual_relations'])) {
     $field['field_ting_visual_relations'] = $content['field_ting_visual_relations'];
     unset($content['field_ting_visual_relations']);
-    // Look for the right column to place our field in.
-    if (!empty($content['ting-object']['content']['right_column'])) {
+    $view_mode = $vars['elements']['#view_mode'];
+    // In the standard view mode, try to place our field in the right column.
+    if ($view_mode == 'full') {
       // Try to position field right after the author field.
-      $author_weight = $content['ting-object']['content']['right_column']['ting_author']['#weight'];
-      $field['field_ting_visual_relations']['#weight'] = ++$author_weight;
-      $content['ting-object']['content']['right_column'] += $field;
+      if (isset($content['ting-object']['content']['right_column']['ting_author'])) {
+        $right_column = &$content['ting-object']['content']['right_column'];
+        $author_weight = $right_column['ting_author']['#weight'];
+        $fields = element_children($right_column);
+        foreach ($fields as $field_name) {
+          if ($right_column[$field_name]['#weight'] > $author_weight) {
+            $right_column[$field_name]['#weight']++;
+          }
+        }
+        $field['field_ting_visual_relations']['#weight'] = ++$author_weight;
+        $right_column += $field;
+      }
     }
+    // TODO: Handle other view modes.
   }
-  // TODO: Try to put it somewhere else if there's no right column.
 }
 
