@@ -125,17 +125,26 @@ function ting_visual_relation_field_formatter_info() {
  */
 function ting_visual_relation_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 	$element = array();
-	// Build the element array as required by Field API.
-	foreach ($items as $delta => $item) {
-		$output = '<button class="ting-visual-relations-activator">' . t('Browse relations') . '</button>';
-		$element[$delta] = array(
-			'#markup' => $output,
-		);
-	}
-	// Add CSS and JS for our field:
-	$path = drupal_get_path('module', 'ting_visual_relation');
-	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.field.js';
-	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.field.css';
+  $d3 = libraries_load('d3');
+  // file_put_contents("/home/drupalpro/debug/debug.txt", print_r($d3, TRUE), FILE_APPEND);
+  if (!empty($d3['installed'])) {
+  	foreach ($items as $delta => $item) {
+  		$element[$delta] = array(
+  			'#prefix' => '<button class="ting-visual-relations-activator">',
+        '#suffix' => '</button>',
+        '#markup' => t('Browse relations'),
+  		);
+  	}
+  	// Add CSS and JS for our field:
+  	$path = drupal_get_path('module', 'ting_visual_relation');
+  	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.field.js';
+  	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.field.css';
+  }
+  else {
+    drupal_set_message(t('The visual relations field needs D3 library installed. Go to the <a href="@status">Status Page</a> for more information', array(
+      '@status' => 'admin/config/status',
+    )), 'error');
+  }
 	return $element;
 }
 
