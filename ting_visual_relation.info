@@ -6,5 +6,5 @@ version = 7.x-0.6.1
 dependencies[] = ding_ting_frontend
 files[] = ting_visual_relation.module
 features[features_api][] = api:2
-features[field_base][] = field_ting_visual_relations
-features[field_instance][] = ting_object-ting_object-field_ting_visual_relations
+features[field_base][] = ting_visual_relations
+features[field_instance][] = ting_object-ting_object-ting_visual_relations
