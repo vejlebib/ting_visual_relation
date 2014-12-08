@@ -149,9 +149,9 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
  */
 function ting_visual_relation_process_ting_object(&$vars) {
   $content = &$vars['content'];
-  if (isset($content['field_ting_visual_relations'])) {
-    $field['field_ting_visual_relations'] = $content['field_ting_visual_relations'];
-    unset($content['field_ting_visual_relations']);
+  if (isset($content['ting_visual_relations'])) {
+    $field['ting_visual_relations'] = $content['ting_visual_relations'];
+    unset($content['ting_visual_relations']);
     $view_mode = $vars['elements']['#view_mode'];
     // In the standard view mode, try to place our field in the right column.
     if ($view_mode == 'full') {
@@ -165,7 +165,7 @@ function ting_visual_relation_process_ting_object(&$vars) {
             $right_column[$field_name]['#weight']++;
           }
         }
-        $field['field_ting_visual_relations']['#weight'] = ++$author_weight;
+        $field['ting_visual_relations']['#weight'] = ++$author_weight;
         $right_column += $field;
       }
     }
