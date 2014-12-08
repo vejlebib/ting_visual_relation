@@ -72,7 +72,7 @@ function ting_visual_relation_field_default_field_instances() {
       'module' => 'virtual_field',
       'settings' => array(),
       'type' => 'hidden',
-      'weight' => 42,
+      'weight' => 11,
     ),
   );
 
