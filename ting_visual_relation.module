@@ -144,8 +144,10 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
  * Implements hook_process_ting_object().
  *
  * Try to place our field on the ting object without destroying the order.
- * This is needed because the hook_preprocess_ting_object() in the template.php
- * of the DDBasic theme is messing up the field_groups.
+ * This is dirty, but it is needed because the hook_preprocess_ting_object()
+ * in the template.php of the DDBasic theme is messing with the field_groups,
+ * making it impossible to add our field at a certain place without destroying
+ * the order.
  */
 function ting_visual_relation_process_ting_object(&$vars) {
   $content = &$vars['content'];
