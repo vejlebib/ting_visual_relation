@@ -83,9 +83,7 @@ function ting_visual_relation_field_info() {
 /**
  * Implements hook_field_load().
  *
- * Populate the items array with the id of the entities the field is being
- * loaded on. If we didn't do this, Field API would think that the field is
- * empty and our formatters wouldn't be called.
+ * Populate the items array preventing the Field API marking it as empty.
  */
 function ting_visual_relation_field_load($entity_type, $entities, $field, $instances, $langcode, &$items, $age) {
 	foreach ($entities as $id => $entity) {
@@ -96,8 +94,8 @@ function ting_visual_relation_field_load($entity_type, $entities, $field, $insta
 /**
  * Implements hook_widget_info_alter().
  *
- * We implement this hook to add our field type to the list of supported
- * fields, for the 'hidden' field widget defined in core.
+ * Adds our field type to the list of supported fields, for the 'hidden' field
+ * widget defined in core.
  */
 function ting_visual_relation_widget_info_alter(&$info) {
 	if (isset($info['hidden'])) {
@@ -125,6 +123,7 @@ function ting_visual_relation_field_formatter_info() {
 function ting_visual_relation_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 	$element = array();
   $d3 = libraries_load('d3');
+  // No need to show field if D3 is not installed proberly.
   if (!empty($d3['installed'])) {
   	foreach ($items as $delta => $item) {
   		$element[$delta] = array(
