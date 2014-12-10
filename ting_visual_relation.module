@@ -6,6 +6,9 @@
  * Module file for the Ting visual relation module.
  */
 
+// Include our feature override.
+include_once 'ting_visual_relation.features.inc';
+
 /**
  * Implements hook_menu().
  */
@@ -68,7 +71,11 @@ function ting_visual_relation_field_info() {
 			'description' => t('A field type that adds an acitivator for a visual relation browser.'),
 			'default_widget' => 'hidden',
 			'default_formatter' => 'ting_visual_relations_default',
-			'no_ui' => TRUE,
+			'no_ui' => FALSE,
+      'virtual_field' => array(
+        'entity_types' => array('ting_object'),
+        'add_widget' => TRUE,
+      ),
 		),
 	);
 }
@@ -118,7 +125,6 @@ function ting_visual_relation_field_formatter_info() {
 function ting_visual_relation_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 	$element = array();
   $d3 = libraries_load('d3');
-  // file_put_contents("/home/drupalpro/debug/debug.txt", print_r($d3, TRUE), FILE_APPEND);
   if (!empty($d3['installed'])) {
   	foreach ($items as $delta => $item) {
   		$element[$delta] = array(
@@ -139,39 +145,3 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
   }
 	return $element;
 }
-
-/**
- * Implements hook_process_ting_object().
- *
- * Try to place our field on the ting object without destroying the order.
- * This is dirty, but it is needed because the hook_preprocess_ting_object()
- * in the template.php of the DDBasic theme is messing with the field_groups,
- * making it impossible to add our field at a certain place with features
- * without destroying the order.
- */
-function ting_visual_relation_process_ting_object(&$vars) {
-  $content = &$vars['content'];
-  if (isset($content['ting_visual_relations'])) {
-    $field['ting_visual_relations'] = $content['ting_visual_relations'];
-    unset($content['ting_visual_relations']);
-    $view_mode = $vars['elements']['#view_mode'];
-    // In the standard view mode, try to place our field in the right column.
-    if ($view_mode == 'full') {
-      // Try to position field right after the author field.
-      if (isset($content['ting-object']['content']['right_column']['ting_author'])) {
-        $right_column = &$content['ting-object']['content']['right_column'];
-        $author_weight = $right_column['ting_author']['#weight'];
-        $fields = element_children($right_column);
-        foreach ($fields as $field_name) {
-          if ($right_column[$field_name]['#weight'] > $author_weight) {
-            $right_column[$field_name]['#weight']++;
-          }
-        }
-        $field['ting_visual_relations']['#weight'] = ++$author_weight;
-        $right_column += $field;
-      }
-    }
-    // TODO: Handle other view modes.
-  }
-}
-
