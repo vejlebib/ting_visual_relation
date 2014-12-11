@@ -1,6 +1,10 @@
 api = 2
 core = 7.x
 
+;Contrib
+projects[features_override][subdir] = "contrib"
+projects[features_override][version] = 2.0-rc2
+
 ; Ding2 modules
 
 projects[ding_ting_frontend][type] = "module"
