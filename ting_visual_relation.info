@@ -4,6 +4,7 @@ package = Ding!
 core = 7.x
 version = 7.x-0.6.1
 dependencies[] = features_override
+dependencies[] = d3
 dependencies[] = ding_ting_frontend
 files[] = ting_visual_relation.module
 features[features_api][] = api:2
