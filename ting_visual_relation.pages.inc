@@ -217,6 +217,11 @@ function ting_visual_relation_get_recommendations($datawell_pid = NULL, $count =
     // pick the first, if the identifier is an array.
     $identifier = is_array($identifier) ? array_shift($identifier) : $identifier;
     $recommendations = ting_get_object_recommendations($identifier, $count);
+    // Sometimes the ADHL-service returns an empty response when it shouldn't.
+    // in this case we try once more.
+    if (empty($recommendations)) {
+      $recommendations = ting_get_object_recommendations($identifier, $count);
+    }
     // Convert to datawell PID's
     foreach ($recommendations as $recommendation) {
       $local_id = $recommendation->localId;
@@ -406,7 +411,6 @@ function ting_visual_relation_json_output($response) {
     drupal_json_output($response);
   }
 }
-
 
 /**
  * Helper function to get URL of the cover of a data-well object.
