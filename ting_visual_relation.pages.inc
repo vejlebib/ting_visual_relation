@@ -511,7 +511,7 @@ function ting_visual_relation_get_default_cover_url($ting_entity) {
     $mtype = mb_strtolower($ting_entity->type);
     $source = mb_strtolower($ting_entity->ac_source);
     $path = _ting_covers_plus_get_default_image($mtype, $source);
-    if (isset($path)) {
+    if (isset($path) && file_exists($path)) {
       $cover_url = file_create_url($path);
     }
   }
