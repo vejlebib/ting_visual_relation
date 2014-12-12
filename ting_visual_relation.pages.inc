@@ -103,6 +103,11 @@ function ting_visual_relation_get_ting_object_array($datawell_pid) {
     if ($cover_url = ting_visual_relation_get_cover_url($ting_entity)) {
       $return[] = _ting_visual_relation_property_value_object('cover', $cover_url);
     }
+    // If no cover was found, check if it's possible to return a default cover.
+    else if ($cover_url = ting_visual_relation_get_default_cover_url($ting_entity)) {
+      file_put_contents("/home/drupalpro/debug/debug.txt", print_r($cover_url, TRUE), FILE_APPEND);
+      $return[] = _ting_visual_relation_property_value_object('default_cover', $cover_url);
+    }
 
     // - with fulltext if available.
     if (!empty($ting_entity->reply->formatsAvailable) && in_array('docbook', $ting_entity->reply->formatsAvailable)) {
@@ -482,6 +487,33 @@ function ting_visual_relation_get_cover_url($ting_entity) {
         	WATCHDOG_ERROR
         );
       }
+    }
+  }
+  return $cover_url;
+}
+
+/**
+ * Helper function to get a default cover for a datawell object, if there was
+ * no cover found in the addi-service.
+ *
+ * @param $ting_entity
+ *   A Drupal entity (ting entity) that wraps the datawell-object the cover
+ *   is being requested on.
+ * @return $cover_url
+ *   A URL for the local copy of the cover.
+ *   FALSE if no cover was found.
+ */
+function ting_visual_relation_get_default_cover_url($ting_entity) {
+  $cover_url = FALSE;
+  // Default covers is provided by ting_covers_plus module. As it's not a
+  // standard DDB CMS module, we dont wanna depend on it.
+  if (module_exists('ting_covers_plus')) {
+    module_load_include('inc', 'ting_covers_plus', 'ting_covers_plus.pages');
+    $mtype = mb_strtolower($ting_entity->type);
+    $source = mb_strtolower($ting_entity->ac_source);
+    $path = _ting_covers_plus_get_default_image($mtype, $source);
+    if (isset($path)) {
+      $cover_url = file_create_url($path);
     }
   }
   return $cover_url;
