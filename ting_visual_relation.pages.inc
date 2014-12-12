@@ -421,16 +421,16 @@ function ting_visual_relation_json_output($response) {
  *
  * TODO: Add option for admins to choose image_style for returned covers?
  *
- * @param $ding_entity
- *   A ding_entity wrapper-object for the data-well object the cover is
- *   being requested on.
+ * @param $ting_entity
+ *   A Drupal entity (ting entity) that wraps the datawell-object the cover
+ *   is being requested on.
  * @return $cover_url
  *   A URL for the local copy of the cover.
  *   FALSE if no cover was found.
  */
-function ting_visual_relation_get_cover_url($ding_entity) {
+function ting_visual_relation_get_cover_url($ting_entity) {
   $cover_url = FALSE;
-	$localId = $ding_entity->localId;
+	$localId = $ting_entity->localId;
   // Don't do anything if the cover is a known negative.
   if (!cache_get('ting_covers:' . $localId)) {
     $path = ting_covers_object_path($localId);
