@@ -453,7 +453,7 @@ function ting_visual_relation_get_cover_url($ting_entity) {
     		);
     		$addi_info = $service->getByLocalIdentifier((object) array(
     			'localIdentifier' => $localId,
-    			'libraryCode' => $ding_entity->ownerId,
+    			'libraryCode' => $ting_entity->ownerId,
     		));
         if (isset($addi_info[$localId]) && $addi_info = $addi_info[$localId]) {
       		$source_url = FALSE;
