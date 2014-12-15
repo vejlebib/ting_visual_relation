@@ -144,3 +144,23 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
   }
 	return $element;
 }
+
+/**
+ * Implements hook_process_ting_object().
+ *
+ * With certain versions of features the feature-override fails to add our
+ * fields to the right-column on ting-objects. So we implement this hook to
+ * make sure the field is in the right place and is not destroying the order
+ * of the other fields.
+ * This bug has been found in version 7.x-2.0-beta2 of features.
+ */
+function ting_visual_relation_process_ting_object(&$vars) {
+  $content = &$vars['content'];
+  // If 'field_ting_visual_relations' is set the feature failed to place our
+  // field on install.
+  if (isset($content['field_ting_visual_relations']) && isset($content['ting-object']['content']['right_column'])) {
+    $field['field_ting_visual_relations'] = $content['field_ting_visual_relations'];
+    unset($content['field_ting_visual_relations']);
+    $content['ting-object']['content']['right_column'] += $field;
+  }
+}
