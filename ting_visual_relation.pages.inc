@@ -105,7 +105,7 @@ function ting_visual_relation_get_ting_object_array($datawell_pid) {
     }
     // If no cover was found, check if it's possible to return a default cover.
     else if ($cover_url = ting_visual_relation_get_default_cover_url($ting_entity)) {
-      $return[] = _ting_visual_relation_property_value_object('default_cover', $cover_url);
+      $return[] = _ting_visual_relation_property_value_object('defaultCover', $cover_url);
     }
 
     // - with fulltext if available.
