@@ -50,6 +50,18 @@ function ting_visual_relation_menu() {
 }
 
 /**
+ * Implements hook_theme().
+ */
+function ting_visual_relation_theme() {
+  return array(
+    'ting_visual_relation_activator' => array(
+      'render element' => 'element',
+      'file' => 'ting_visual_relation.theme.inc',
+    ),
+  );
+}
+
+/**
  * Implements hook_ding_provider_user().
  */
 function ting_visual_relation_ding_provider_user() {
