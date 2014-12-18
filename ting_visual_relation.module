@@ -57,12 +57,17 @@ function ting_visual_relation_theme() {
     'ting_visual_relation_activation_area' => array(
       'template' => 'ting-visual-relation-activation-area',
       'variables' => array(
+        // Array with activators to go in this area.
         'activators' => array(),
       ),
       'file' => 'ting_visual_relation.theme.inc',
     ),
     'ting_visual_relation_activator' => array(
-      'render element' => 'element',
+      'variables' => array(
+        // The type of relationbrowser (external, circular or struct)
+        'type' => NULL,
+        'object' => NULL,
+      ),
       'file' => 'ting_visual_relation.theme.inc',
     ),
   );
