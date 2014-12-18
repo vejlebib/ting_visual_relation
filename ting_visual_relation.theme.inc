@@ -26,3 +26,10 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
       $vars['attributes_array']['data-relvis-id'] = 'search:' . $vars['search'];
   }
 }
+
+/**
+ * Implements hook_process_ting_visual_relation_activator().
+ */
+function template_process_ting_visual_relation_activator(&$vars) {
+  $vars['attributes'] = drupal_attributes($vars['attributes_array']);
+}
