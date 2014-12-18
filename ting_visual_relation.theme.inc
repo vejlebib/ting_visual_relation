@@ -20,7 +20,8 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
   switch ($type) {
     case 'external':
     case 'circular':
-      $vars['attributes_array']['data-relvis-id'] = $vars['object']->id;
+      $datawell_pid = rawurlencode($vars['object']->id);
+      $vars['attributes_array']['data-relvis-id'] = $datawell_pid;
       break;
     case 'struct':
       $vars['attributes_array']['data-relvis-id'] = 'search:' . $vars['search'];
