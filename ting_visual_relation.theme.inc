@@ -39,6 +39,7 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
  */
 function template_process_ting_visual_relation_activator(&$vars) {
   $vars['attributes'] = drupal_attributes($vars['attributes_array']);
+  $vars['classes'] = implode(' ', $vars['classes_array']);
 }
 
 /**
@@ -47,5 +48,7 @@ function template_process_ting_visual_relation_activator(&$vars) {
  * Default implementation for ting_visual_relation_activator.
  */
 function theme_ting_visual_relation_activator($vars) {
-
-}
+  $attributes = $vars['attributes'];
+  $classes = $vars['classes'];
+  return '<button class="' . $classes . ' ' . $attributes . '>' . t('Browser relations') . '</button>';
+ }
