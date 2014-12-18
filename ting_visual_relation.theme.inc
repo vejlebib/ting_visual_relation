@@ -17,6 +17,9 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
   if (!isset($vars['attributes_array'])) {
     $vars['attributes_array'] = array();
   }
+  if (!isset($vars['classes_array'])) {
+    $vars['classes_array'] = array();
+  }
   $vars['attributes_array']['data-relvis-type'] = $type;
   switch ($type) {
     case 'external':
@@ -36,4 +39,13 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
  */
 function template_process_ting_visual_relation_activator(&$vars) {
   $vars['attributes'] = drupal_attributes($vars['attributes_array']);
+}
+
+/**
+ * Implements theme_hook().
+ *
+ * Default implementation for ting_visual_relation_activator.
+ */
+function theme_ting_visual_relation_activator($vars) {
+
 }
