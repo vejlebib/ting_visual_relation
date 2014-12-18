@@ -41,10 +41,6 @@ function ting_visual_relation_menu() {
     'title' => 'Get search result',
     'page callback' => 'ting_visual_relation_get_search_result',
   ) + $common;
-  $items['ting-visual-relation/get-structure'] = array(
-    'title' => 'Get structure',
-    'page callback' => 'ting_visual_relation_get_structure',
-  ) + $common;
 
 	return $items;
 }
@@ -153,11 +149,20 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
   // No need to show field if D3 is not installed proberly.
   if (!empty($d3['installed'])) {
   	foreach ($items as $delta => $item) {
-  		$element[$delta] = array(
+  		$element[$delta]['normal'] = array(
   			'#prefix' => '<button class="ting-visual-relations-activator">',
         '#suffix' => '</button>',
         '#markup' => t('Browse relations'),
   		);
+      $element[$delta]['test'] = array(
+        '#theme' => 'ting_visual_relation_activation_area',
+        '#activators' => array(),
+      );
+      $element[$delta]['test']['#activators'][] = array(
+        '#theme' => 'ting_visual_relation_activator',
+        '#type' => 'external',
+        '#object' => $entity,
+      );
   	}
   	// Add CSS and JS for our field:
   	$path = drupal_get_path('module', 'ting_visual_relation');
