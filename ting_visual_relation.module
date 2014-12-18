@@ -54,6 +54,13 @@ function ting_visual_relation_menu() {
  */
 function ting_visual_relation_theme() {
   return array(
+    'ting_visual_relation_activation_area' => array(
+      'template' => 'ting-visual-relation-activation-area',
+      'variables' => array(
+        'acitivators' => array(),
+      ),
+      'file' => 'ting_visual_relation.theme.inc',
+    ),
     'ting_visual_relation_activator' => array(
       'render element' => 'element',
       'file' => 'ting_visual_relation.theme.inc',
