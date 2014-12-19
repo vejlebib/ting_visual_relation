@@ -151,18 +151,14 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
   // No need to show field if D3 is not installed proberly.
   if (!empty($d3['installed'])) {
   	foreach ($items as $delta => $item) {
-  		$element[$delta]['normal'] = array(
-  			'#prefix' => '<button class="ting-visual-relations-activator">',
-        '#suffix' => '</button>',
-        '#markup' => t('Browse relations'),
-  		);
-      $element[$delta]['test'] = array(
+      $element[$delta]['external'] = array(
         '#theme' => 'ting_visual_relation_activation_area',
         '#activators' => array(),
       );
-      $element[$delta]['test']['#activators'][] = array(
+      $element[$delta]['external']['#activators'][] = array(
         '#theme' => 'ting_visual_relation_activator',
         '#type' => 'external',
+        '#text' => t('Browse relations'),
         '#object' => $entity,
       );
   	}
