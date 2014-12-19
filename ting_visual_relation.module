@@ -62,9 +62,11 @@ function ting_visual_relation_theme() {
       'variables' => array(
         // The type of relationbrowser (external, circular or struct)
         'type' => NULL,
+        // The text to go on the button
+        'text' => NULL,
         // Will only be set for external and circular
         'object' => NULL,
-        // Will only be set for the struct-type relation browser.
+        // Will only be set for the struct-type relation browser
         'search' => NULL,
       ),
       'file' => 'ting_visual_relation.theme.inc',
