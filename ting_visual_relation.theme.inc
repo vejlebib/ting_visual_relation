@@ -50,5 +50,5 @@ function template_process_ting_visual_relation_activator(&$vars) {
 function theme_ting_visual_relation_activator($vars) {
   $attributes = $vars['attributes'];
   $classes = $vars['classes'];
-  return '<button class="' . $classes . ' ' . $attributes . '>' . t('Browser relations') . '</button>';
+  return '<button class="' . $classes . '" ' . $attributes . '>' . t('Browser relations') . '</button>';
  }
