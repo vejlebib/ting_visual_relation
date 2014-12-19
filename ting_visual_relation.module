@@ -148,8 +148,9 @@ function ting_visual_relation_field_formatter_info() {
 function ting_visual_relation_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 	$element = array();
   $d3 = libraries_load('d3');
+  $d3_version = $d3['version'];
   // No need to show field if D3 is not installed proberly.
-  if (!empty($d3['installed'])) {
+  if (!empty($d3['installed']) && version_compare($d3_version, '3.0') > 0) {
   	foreach ($items as $delta => $item) {
       $element[$delta] = array(
         '#theme' => 'ting_visual_relation_activation_area',
@@ -174,7 +175,7 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
   	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.field.css';
   }
   else {
-    drupal_set_message(t('The visual relations field needs D3 library installed. Go to the <a href="@status">Status Page</a> for more information', array(
+    drupal_set_message(t('The visual relations field needs D3 version 3.0+ library installed. Go to the <a href="@status">Status Page</a> for more information', array(
       '@status' => 'admin/config/status',
     )), 'error');
   }
