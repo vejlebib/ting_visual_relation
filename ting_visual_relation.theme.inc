@@ -20,6 +20,7 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
   if (!isset($vars['classes_array'])) {
     $vars['classes_array'] = array();
   }
+
   $vars['attributes_array']['data-relvis-type'] = $type;
   switch ($type) {
     case 'external':
@@ -48,7 +49,5 @@ function template_process_ting_visual_relation_activator(&$vars) {
  * Default implementation for ting_visual_relation_activator.
  */
 function theme_ting_visual_relation_activator($vars) {
-  $attributes = $vars['attributes'];
-  $classes = $vars['classes'];
-  return '<button class="' . $classes . '" ' . $attributes . '>' . t('Browser relations') . '</button>';
+  return '<button class="' . $vars['classes'] . '" ' . $vars['attributes'] . '>' . $vars['text'] . '</button>';
  }
