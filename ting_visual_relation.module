@@ -169,8 +169,20 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
         '#object' => $entity,
       );
   	}
-  	// Add CSS and JS for our field:
-  	$path = drupal_get_path('module', 'ting_visual_relation');
+    // Pass the API-URL on to javascript as a setting.
+    global $base_url;
+    $api_url = $base_url . '/' . str_replace('_', '-', basename(__FILE__, '.module'));
+    $log_url = 'http://relvis.solsort.com/_relvis_log.js';
+    $element['#attached']['js'][] = array(
+      'data' => array(
+        'tingVisualRelation' => array(
+          'apiUrl' => $api_url,
+          'logUrl' => $log_url,
+        ),
+      ),
+      'type' => 'setting',
+    );
+    $path = drupal_get_path('module', 'ting_visual_relation');
     $element['#attached']['js'][] = $path . '/js/ting_visual_relation.relvis.min.js';
   	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.js';
   	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.base.css';
