@@ -171,8 +171,10 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
   	}
   	// Add CSS and JS for our field:
   	$path = drupal_get_path('module', 'ting_visual_relation');
-  	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.field.js';
-  	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.field.css';
+    $element['#attached']['js'][] = $path . '/js/ting_visual_relation.relvis.js';
+  	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.js';
+  	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.base.css';
+    $element['#attached']['css'][] = $path . '/css/ting_visual_relation.theme.css';
   }
   else {
     drupal_set_message(t('The visual relations field needs D3 version 3.0+ library installed. Go to the <a href="@status">Status Page</a> for more information', array(
