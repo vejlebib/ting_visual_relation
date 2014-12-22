@@ -12,7 +12,7 @@
 function template_preprocess_ting_visual_relation_activator(&$vars) {
   $type = $vars['type'];
   $datawell_pid = rawurlencode($vars['object']->id);
-  // Might be set if the implementation is changed to a template?
+  // Make sure the attributes and classes array is always set.
   if (!isset($vars['attributes_array'])) {
     $vars['attributes_array'] = array();
   }
