@@ -19,7 +19,9 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
   if (!isset($vars['classes_array'])) {
     $vars['classes_array'] = array();
   }
-
+  $vars['classes_array'][] = 'relvis-request';
+  $vars['classes_array'][] = 'ting-visual-relation-activator';
+  $vars['classes_array'][] = 'ting-visual-relation-activator' . '-' . $type;
   $vars['attributes_array']['data-relvis-type'] = $type;
   switch ($type) {
     case 'external':
