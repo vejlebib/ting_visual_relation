@@ -158,14 +158,14 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
       );
       $element[$delta]['#activators'][] = array(
         '#theme' => 'ting_visual_relation_activator',
-        '#type' => 'external',
-        '#text' => t('Browse relations'),
+        '#type' => 'circular',
+        '#text' => t('Recommendations'),
         '#object' => $entity,
       );
       $element[$delta]['#activators'][] = array(
         '#theme' => 'ting_visual_relation_activator',
-        '#type' => 'circular',
-        '#text' => t('Recommendations'),
+        '#type' => 'external',
+        '#text' => t('Browse relations'),
         '#object' => $entity,
       );
   	}
