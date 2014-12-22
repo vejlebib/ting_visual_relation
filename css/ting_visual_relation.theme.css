@@ -1,0 +1,9 @@
+.ting-visual-relation-activator {
+  border-radius: 10px;
+  color: #fff;
+  background-color: #000;
+}
+
+.ting-visual-relation-activator:hover {
+  background-color: #373737;
+}
