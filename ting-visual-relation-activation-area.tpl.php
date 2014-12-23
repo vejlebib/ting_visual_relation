@@ -17,7 +17,7 @@
 
 <?php if (!empty($activators)): ?>
   <div class="ting-visual-relation-wrapper <?php print $classes;?>" <?php print $attributes; ?>>
-    <div class="ting-visual-relation-innner-wrapper">
+    <div class="ting-visual-relation-inner-wrapper">
       <?php foreach ($activators as $activator): ?>
         <?php print render($activator); ?>
       <?php endforeach; ?>
