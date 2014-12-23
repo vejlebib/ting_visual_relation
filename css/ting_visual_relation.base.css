@@ -1,9 +1,35 @@
-.ting-visual-relation-activation-area {
-  margin: 1em 0;
+.ting-object .ting-visual-relation-activator {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  display: inline-block;
+  border: none;
+  width: 100%;
+  padding: 0.5em 1.8em;
+  margin-top: 1em;
 }
 
-.ting-visual-relation-activator {
-  border: none;
-  min-width: 11em;
-  padding: 0.5em 1.8em;
+.ting-object .ting-visual-relation-inner-wrapper:last-child {
+  margin-bottom: 2.0em;
 }
+
+.ting-visual-relation-activator.relvis-disabled {
+  display: none;
+}
+
+@media only screen and (min-width: 481px) and (max-width: 768px) {
+
+  .ting-object .ting-visual-relation-activator {
+    width: 49%;
+  }
+
+}
+
+@media only screen and (min-width: 769px) {
+
+  .ting-object .ting-visual-relation-activator {
+    width: 13em;
+  }
+
+}
+
