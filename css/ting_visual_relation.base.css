@@ -18,18 +18,14 @@
 }
 
 @media only screen and (min-width: 481px) and (max-width: 768px) {
-
   .ting-object .ting-visual-relation-activator {
     width: 49%;
   }
-
 }
 
 @media only screen and (min-width: 769px) {
-
   .ting-object .ting-visual-relation-activator {
     width: 13em;
   }
-
 }
 
