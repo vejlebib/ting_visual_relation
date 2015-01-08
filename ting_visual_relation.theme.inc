@@ -50,5 +50,6 @@ function template_process_ting_visual_relation_activator(&$vars) {
  * Default implementation for ting_visual_relation_activator.
  */
 function theme_ting_visual_relation_activator($vars) {
-  return '<button class="' . $vars['classes'] . '" ' . $vars['attributes'] . '>' . $vars['text'] . '</button>';
+  $button = '<button class="' . $vars['classes'] . '" ' . $vars['attributes'] . '>' . $vars['text'] . '</button>';
+  return '<div class="ting-visual-relation-activator-wrapper">' . $button . '</div>';
  }
