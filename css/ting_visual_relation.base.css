@@ -8,13 +8,13 @@
 .ting-object .ting-visual-relation-activator-wrapper {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
+  margin-bottom: 1.2em;
   display: block;
   float: left;
   width: 100%;
 }
 
 .ting-object .ting-visual-relation-activator {
-  margin-bottom: 1.2em;
   padding: 0.5em 1.8em;
   width: 100%;
   border: none;
@@ -22,12 +22,11 @@
 
 @media only screen and (min-width: 481px) {
   .ting-object .ting-visual-relation-activator-wrapper {
-    padding-right: 0.5em;
     width: 50%;
   }
 
-  .ting-object .ting-visual-relation-inner-wrapper .ting-visual-relation-activator-wrapper:last-child {
-    padding-right: 0;
+  .ting-object .ting-visual-relation-activator-wrapper:first-child {
+    padding-right: 0.5em;
   }
 }
 
