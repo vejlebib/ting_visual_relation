@@ -179,24 +179,7 @@ function ting_visual_relation_field_formatter_view($entity_type, $entity, $field
         '#object' => $entity,
       );
   	}
-    // Pass the API-URL on to javascript as a setting.
-    global $base_url;
-    $api_url = $base_url . '/' . str_replace('_', '-', basename(__FILE__, '.module'));
-    $log_url = 'http://relvis.solsort.com/_relvis_log.js';
-    $element['#attached']['js'][] = array(
-      'data' => array(
-        'tingVisualRelation' => array(
-          'apiUrl' => $api_url,
-          'logUrl' => $log_url,
-        ),
-      ),
-      'type' => 'setting',
-    );
-    $path = drupal_get_path('module', 'ting_visual_relation');
-    $element['#attached']['js'][] = $path . '/js/ting_visual_relation.relvis.min.js';
-  	$element['#attached']['js'][] = $path . '/js/ting_visual_relation.js';
-  	$element['#attached']['css'][] = $path . '/css/ting_visual_relation.base.css';
-    $element['#attached']['css'][] = $path . '/css/ting_visual_relation.theme.css';
+    ting_visual_relation_prepare_render_array($element);
   }
   else {
     drupal_set_message(t('The visual relations field needs D3 version 3.0+ library installed. Go to the <a href="@status">Status Page</a> for more information', array(
@@ -224,4 +207,29 @@ function ting_visual_relation_process_ting_object(&$vars) {
     unset($content['field_ting_visual_relations']);
     $content['ting-object']['content']['right_column'] += $field;
   }
+}
+
+/**
+ * Prepares a render-array for a Ting visual relation activation area with the
+ * needed Javascript and CSS.
+ */
+function ting_visual_relation_prepare_render_array(&$render_array) {
+  // Pass the API- and log-URL to javascript as a setting.
+  global $base_url;
+  $api_url = $base_url . '/ting-visual-relation';
+  $log_url = 'http://relvis.solsort.com/_relvis_log.js';
+  $render_array['#attached']['js'][] = array(
+    'data' => array(
+      'tingVisualRelation' => array(
+        'apiUrl' => $api_url,
+        'logUrl' => $log_url,
+      ),
+    ),
+    'type' => 'setting',
+  );
+  $path = drupal_get_path('module', 'ting_visual_relation');
+  $render_array['#attached']['js'][] = $path . '/js/ting_visual_relation.relvis.min.js';
+  $render_array['#attached']['js'][] = $path . '/js/ting_visual_relation.js';
+  $render_array['#attached']['css'][] = $path . '/css/ting_visual_relation.base.css';
+  $render_array['#attached']['css'][] = $path . '/css/ting_visual_relation.theme.css';
 }
