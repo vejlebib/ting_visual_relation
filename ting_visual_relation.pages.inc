@@ -305,6 +305,7 @@ function ting_visual_relation_get_search_result($search_engine = NULL, $search_q
             $result = drupal_static('ting_extrasearch_results');
           }
           $response = new stdClass;
+          $response->search_count = $result->numTotalObjects;
           // Setup collections if any.
           if (!empty($result->collections)) {
             $response->collections = array();
