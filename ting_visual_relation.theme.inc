@@ -11,7 +11,6 @@
  */
 function template_preprocess_ting_visual_relation_activator(&$vars) {
   $type = $vars['type'];
-  $datawell_pid = rawurlencode($vars['object']->id);
   // Make sure the attributes and classes array is always set.
   if (!isset($vars['attributes_array'])) {
     $vars['attributes_array'] = array();
@@ -26,6 +25,7 @@ function template_preprocess_ting_visual_relation_activator(&$vars) {
   switch ($type) {
     case 'external':
     case 'circular':
+      $datawell_pid = rawurlencode($vars['object']->id);
       $vars['attributes_array']['data-relvis-id'] = $datawell_pid;
       break;
     case 'struct':
