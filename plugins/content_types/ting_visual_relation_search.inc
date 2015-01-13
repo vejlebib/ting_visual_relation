@@ -22,7 +22,6 @@ $plugin = array(
  */
 function ting_visual_relation_search_content_type_render($subtype, $conf, $args, $context) {
   $block = new stdClass();
-  $block->title = t('Ting visual relation - Search visualization');
   $content = array();
   if (!empty($context) && isset($context->data)) {
     $d3 = libraries_load('d3');
@@ -35,7 +34,7 @@ function ting_visual_relation_search_content_type_render($subtype, $conf, $args,
       $content['#activators'][] = array(
         '#theme' => 'ting_visual_relation_activator',
         '#type' => 'struct',
-        '#text' => t('Overview'),
+        '#text' => t('Visualize your search'),
         '#search' => $search,
       );
       ting_visual_relation_prepare_render_array($content);
