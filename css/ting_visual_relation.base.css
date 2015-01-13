@@ -4,7 +4,7 @@
   display: none;
 }
 
-/* Styling of activators on ting objects */
+/* Basic styling of activators on ting objects */
 .ting-object .ting-visual-relation-activator-wrapper {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
@@ -15,7 +15,6 @@
 }
 
 .ting-object .ting-visual-relation-activator {
-  padding: 0.5em 1.8em;
   width: 100%;
 }
 
@@ -32,5 +31,32 @@
 @media only screen and (min-width: 769px) {
   .ting-object .ting-visual-relation-activator-wrapper {
     width: 13em;
+  }
+}
+
+/* Basic styling of activators on search-page. */
+.pane-ting-visual-relation-search .ting-visual-relation-activator {
+  width: 100%;
+}
+
+.secondary-content .pane-ting-visual-relation-search .ting-visual-relation-wrapper  {
+  display: none;
+  margin: 0px 5px 15px 5px;
+}
+
+.primary-content .pane-ting-visual-relation-search .ting-visual-relation-wrapper {
+  margin: 20px 0px;
+}
+
+/*
+ * On larger screens hide the activator in primary content and show the one in
+ * secondary content (left sidebar)
+ */
+@media only screen and (min-width: 941px) {
+  .secondary-content .pane-ting-visual-relation-search .ting-visual-relation-wrapper {
+    display: block;
+  }
+  .primary-content .pane-ting-visual-relation-search .ting-visual-relation-wrapper {
+    display: none;
   }
 }
