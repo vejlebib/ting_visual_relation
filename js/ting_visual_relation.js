@@ -10,7 +10,7 @@
         clickHandle: function(o) {
           if (typeof(o.id) !== 'undefined') {
             // Regex that matches a datawell-pid
-            var regex = /^\d{6}-{1}\D+:{1}\d+$/;
+            var regex = /^\d{6}-\D+:\d+$/;
             // If this a datawell object: Show it
             if (regex.test(o.id)) {
               window.open('/ting/object/' + o.id);
