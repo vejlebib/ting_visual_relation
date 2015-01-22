@@ -11,9 +11,9 @@
  */
 function ting_visual_relation_schema() {
   $schema = array();
-  // The table used to hold settings for each slide in relation browser
+  // The table used to hold settings for each slide in the relation browser
   // slideshow. Used by the visual relation application. See:
-  // see: https://github.com/vejlebib/visual_relation.git
+  // https://github.com/vejlebib/visual_relation.git
   $schema['ting_visual_relation_slides'] = array(
     'description' => 'A table to hold the settings for the visual relation browser slides.',
     'fields' => array(
