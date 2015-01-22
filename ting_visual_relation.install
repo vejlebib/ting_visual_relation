@@ -55,11 +55,7 @@ function ting_visual_relation_schema() {
 }
 
 /**
- * Implements hook_update_N().
- *
- * Adds the ting_visual_relation_slides table to hold the settings for each
- * slide used in the visual_relation app.
- * see: https://github.com/vejlebib/visual_relation.git
+ * Adds the first version of the ting_visual_relation_slides table
  */
 function ting_visual_relation_update_7000(&$sandbox) {
   // For an exlanation of why we don't use hook_schema here see:
