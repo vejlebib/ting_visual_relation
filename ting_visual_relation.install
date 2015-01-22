@@ -45,6 +45,10 @@ function ting_visual_relation_schema() {
         'length' => 255,
       ),
     ),
+    'primary key' => array('slide_id'),
+    'unique keys' => array(
+      'position' => array('position'),
+    ),
   );
 
   return $schema;
@@ -93,6 +97,10 @@ function ting_visual_relation_update_7000(&$sandbox) {
         'type' => 'varchar',
         'length' => 255,
       ),
+    ),
+    'primary key' => array('slide_id'),
+    'unique keys' => array(
+      'position' => array('position'),
     ),
   );
   if (!db_table_exists('ting_visual_relation_slides')) {
