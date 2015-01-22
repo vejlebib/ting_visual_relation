@@ -53,6 +53,22 @@ function ting_visual_relation_menu() {
     'page callback' => 'ting_visual_relation_get_search_result',
   ) + $common;
 
+  // Administration interface
+  $items['admin/config/ting/ting-visual-relation'] = array(
+    'title' => 'Settings',
+    'description' => 'Manage basic settings for the Ting visual relation module',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ting_visual_relation_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ting_visual_relation.admin.inc',
+  );
+  $items['admin/config/ting/ting-visual-relation/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Manage basic settings for the Ting visual relation module',
+    'type' => MENU_DEFAULT_LOCAL_TASK,
+    'weight' => -10,
+  );
+
 	return $items;
 }
 
