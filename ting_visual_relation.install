@@ -5,3 +5,47 @@
  *
  * Install file for the Ting visual relation module.
  */
+
+/**
+ * Implements hook_schema().
+ */
+function ting_visual_relation_schema() {
+  $schema = array();
+
+  $schema['ting_visual_relation_slides'] = array(
+    'description' => 'A table to hold the settings for the visual relation browser slides.',
+    'fields' => array(
+      'slide_id' => array(
+        'description' => 'Primary key for a relation browser slide.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'type' => array(
+        'description' => 'The machine readable name of relation browser type (external, circular or search)',
+        'type' => 'varchar',
+        'length' => 24,
+        'not null' => TRUE,
+        'default' => 'external'
+      ),
+      'position' => array(
+        'description' => 'The position in the slideshow.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'datawell_pid' => array(
+        'description' => 'The datawell-PID to use in an external or circular relation browser slide.',
+        'type' => 'varchar',
+        'length' => 40,
+      ),
+      'search_query' => array(
+        'description' => 'The search query to use in a Search relation browser slide (Search visualization)',
+        'type' => 'varchar',
+        'length' => 255,
+      ),
+    ),
+  );
+
+  return $schema;
+}
