@@ -26,6 +26,7 @@ function ting_visual_relation_ctools_plugin_directory($module, $plugin) {
 function ting_visual_relation_menu() {
 	$items = array();
 
+  // Callbacks
   $common = array(
     'access arguments' => array('access content'),
     'type' => MENU_CALLBACK,
@@ -53,15 +54,18 @@ function ting_visual_relation_menu() {
     'page callback' => 'ting_visual_relation_get_search_result',
   ) + $common;
 
-  // Administration interface
-  $items['admin/config/ting/ting-visual-relation'] = array(
-    'title' => 'Settings',
-    'description' => 'Manage basic settings for the Ting visual relation module',
+  // Administration
+  $common = array(
     'page callback' => 'drupal_get_form',
-    'page arguments' => array('ting_visual_relation_settings_form'),
     'access arguments' => array('administer site configuration'),
     'file' => 'ting_visual_relation.admin.inc',
   );
+
+  $items['admin/config/ting/ting-visual-relation'] = array(
+    'title' => 'Settings',
+    'description' => 'Manage basic settings for the Ting visual relation module',
+    'page arguments' => array('ting_visual_relation_settings_form'),
+  ) + $common;
   $items['admin/config/ting/ting-visual-relation/settings'] = array(
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
@@ -69,11 +73,8 @@ function ting_visual_relation_menu() {
   $items['admin/config/ting/ting-visual-relation/app-settings'] = array(
     'title' => 'App settings',
     'description' => 'Manage settings for the Visual relation app.',
-    'page callback' => 'drupal_get_form',
     'page arguments' => array('ting_visual_relation_app_settings_form'),
-    'access arguments' => array('administer site configuration'),
-    'file' => 'ting_visual_relation.admin.inc';
-  );
+  ) + $common;
 
 	return $items;
 }
