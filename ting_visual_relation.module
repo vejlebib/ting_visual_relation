@@ -78,6 +78,12 @@ function ting_visual_relation_menu() {
     'page arguments' => array('ting_visual_relation_app_settings_form'),
     'type' => MENU_LOCAL_TASK,
   ) + $common;
+  $items['admin/config/ting/ting-visual-relation/app-settings/add'] = array(
+    'title' => 'Add slide',
+    'description' => 'Add a slide to the Visual relation app.',
+    'page arguments' => array('ting_visual_relation_add_slide_form'),
+    'type' => MENU_LOCAL_ACTION,
+  ) + $common;
 
 	return $items;
 }
