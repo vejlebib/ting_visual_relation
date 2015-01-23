@@ -62,11 +62,13 @@ function ting_visual_relation_menu() {
   );
 
   $items['admin/config/ting/ting-visual-relation'] = array(
-    'title' => 'Settings',
-    'description' => 'Manage basic settings for the Ting visual relation module',
+    'title' => 'Ting visual relation',
+    'description' => 'Manage settings for the Ting visual relation module',
     'page arguments' => array('ting_visual_relation_settings_form'),
   ) + $common;
   $items['admin/config/ting/ting-visual-relation/settings'] = array(
+    'title' => 'Settings',
+    'description' => 'Manage basic settings for the Ting visual relation module',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
   );
@@ -74,6 +76,7 @@ function ting_visual_relation_menu() {
     'title' => 'App settings',
     'description' => 'Manage settings for the Visual relation app.',
     'page arguments' => array('ting_visual_relation_app_settings_form'),
+    'type' => MENU_LOCAL_TASK,
   ) + $common;
 
 	return $items;
