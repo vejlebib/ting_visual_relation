@@ -115,6 +115,11 @@ function ting_visual_relation_ding_provider_user() {
 
 /**
  * Implements hook_field_info().
+ *
+ * The field is configured as a virtual field with features without using
+ * hook_ding_entity_field(). See:
+ * ting_visual_relation.features.field_base.inc
+ * ting_visual_relation.features.field_instance.inc
  */
 function ting_visual_relation_field_info() {
 	return array(
@@ -123,11 +128,7 @@ function ting_visual_relation_field_info() {
 			'description' => t('A field type that adds an acitivator for a visual relation browser.'),
 			'default_widget' => 'hidden',
 			'default_formatter' => 'ting_visual_relations_default',
-			'no_ui' => FALSE,
-      'virtual_field' => array(
-        'entity_types' => array('ting_object'),
-        'add_widget' => TRUE,
-      ),
+			'no_ui' => TRUE,
 		),
 	);
 }
