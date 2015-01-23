@@ -272,8 +272,11 @@ function ting_visual_relation_prepare_render_array(&$render_array) {
  */
 function ting_visual_relation_types() {
   return array(
-    'external' => t('External'),
-    'circular' => t('Circular'),
-    'search' => t('Search'),
+    'external' => t('External browser'),
+    'circular' => t('Circular browser'),
+    // Search would probably be a better machine-name for Search browser, but
+    // the relation browser HTML5 component uses structural, so we stick with
+    // this terminology for now.
+    'structural' => t('Search browser'),
   );
 }
