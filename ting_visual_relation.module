@@ -63,10 +63,16 @@ function ting_visual_relation_menu() {
     'file' => 'ting_visual_relation.admin.inc',
   );
   $items['admin/config/ting/ting-visual-relation/settings'] = array(
-    'title' => 'Settings',
-    'description' => 'Manage basic settings for the Ting visual relation module',
     'type' => MENU_DEFAULT_LOCAL_TASK,
     'weight' => -10,
+  );
+  $items['admin/config/ting/ting-visual-relation/app-settings'] = array(
+    'title' => 'App settings',
+    'description' => 'Manage settings for the Visual relation app.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('ting_visual_relation_app_settings_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'ting_visual_relation.admin.inc';
   );
 
 	return $items;
