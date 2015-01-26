@@ -67,10 +67,30 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
 }
 
 /**
- * Submit handler for ting_visual_relation_add_slide_form
+ * Validation handler for ting_visual_relation_add_slide_form.
+ */
+function ting_visual_relation_add_slide_form_validate($form, &$form_state) {
+  $type = $form_state['values']['type'];
+  switch ($type) {
+    case 'external':
+    case 'circular':
+      $datawell_pid = $form_state['values']['datawell_pid'];
+      if (empty($datawell_pid)) {
+        form_set_error('datawell_pid', t('Please enter a valid datawell-PID'));
+      }
+      break;
+    case 'structural':
+      $search_query = $form_state['values']['search_query'];
+      if (empty($search_query)) {
+        form_set_error('search_query', t('Please enter a search query'));
+      }
+  }
+}
+
+/**
+ * Submit handler for ting_visual_relation_add_slide_form.
  */
 function ting_visual_relation_add_slide_form_submit($form, &$form_state) {
   drupal_set_message(t('Slide saved'));
   $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
-  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($form_state, TRUE), FILE_APPEND);
 }
