@@ -91,6 +91,18 @@ function ting_visual_relation_add_slide_form_validate($form, &$form_state) {
  * Submit handler for ting_visual_relation_add_slide_form.
  */
 function ting_visual_relation_add_slide_form_submit($form, &$form_state) {
+  $type = $form_state['values']['type'];
+  $fields = array('type' => $type);
+  switch ($type) {
+    case 'external':
+    case 'circular':
+      $fields['datawell_pid'] = $form_state['values']['datawell_pid'];
+      break;
+    case 'structural':
+      $fields['search_query'] = $form_state['values']['search_query'];
+  }
+  // Save and go back to table overview.
+  db_insert('ting_visual_relation_slides')->fields($fields)->execute();
   drupal_set_message(t('Slide saved'));
   $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
 }
