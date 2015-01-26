@@ -81,7 +81,7 @@ function ting_visual_relation_add_slide_form_validate($form, &$form_state) {
       }
       break;
     case 'structural':
-      if ($form_state['values']['search_query']) {
+      if (empty($form_state['values']['search_query'])) {
         form_set_error('search_query', t('Please enter a search query'));
       }
   }
