@@ -114,6 +114,10 @@ function ting_visual_relation_theme() {
       ),
       'file' => 'ting_visual_relation.theme.inc',
     ),
+    'ting_visual_relation_app_settings_form' => array(
+      'render element' => 'form',
+      'file' => 'ting_visual_relation.admin.inc',
+    ),
   );
 }
 
