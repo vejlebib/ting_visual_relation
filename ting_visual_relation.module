@@ -250,7 +250,7 @@ function ting_visual_relation_prepare_render_array(&$render_array) {
   // Pass the API- and log-URL to javascript as a setting.
   global $base_url;
   $api_url = $base_url . '/ting-visual-relation';
-  $log_url = 'http://relvis.solsort.com/_relvis_log.js';
+  $log_url = '//relvis.solsort.com/_relvis_log.js';
   $render_array['#attached']['js'][] = array(
     'data' => array(
       'tingVisualRelation' => array(
