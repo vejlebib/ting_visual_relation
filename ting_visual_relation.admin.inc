@@ -70,5 +70,7 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
  * Submit handler for ting_visual_relation_add_slide_form
  */
 function ting_visual_relation_add_slide_form_submit($form, &$form_state) {
+  drupal_set_message(t('Slide saved'));
+  $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
   file_put_contents("/home/drupalpro/debug/debug.txt", print_r($form_state, TRUE), FILE_APPEND);
 }
