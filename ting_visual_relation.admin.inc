@@ -75,13 +75,13 @@ function ting_visual_relation_add_slide_form_validate($form, &$form_state) {
     case 'external':
     case 'circular':
       $datawell_pid = $form_state['values']['datawell_pid'];
+      // TODO: use a regex to validate the datawell-PID.
       if (empty($datawell_pid)) {
         form_set_error('datawell_pid', t('Please enter a valid datawell-PID'));
       }
       break;
     case 'structural':
-      $search_query = $form_state['values']['search_query'];
-      if (empty($search_query)) {
+      if ($form_state['values']['search_query']) {
         form_set_error('search_query', t('Please enter a search query'));
       }
   }
