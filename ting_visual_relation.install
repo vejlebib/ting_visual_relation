@@ -48,9 +48,6 @@ function ting_visual_relation_schema() {
       ),
     ),
     'primary key' => array('slide_id'),
-    'unique keys' => array(
-      'position' => array('position'),
-    ),
   );
 
   return $schema;
@@ -104,4 +101,11 @@ function ting_visual_relation_update_7000(&$sandbox) {
   if (!db_table_exists('ting_visual_relation_slides')) {
     db_create_table('ting_visual_relation_slides', $schema['slides']);
   }
+}
+
+/**
+ * Drop unique key 'position' in ting_visual_relation_slides table.
+ */
+function ting_visual_relation_update_7001(&$sandbox) {
+  db_drop_unique_key('ting_visual_relation_slides', 'position');
 }
