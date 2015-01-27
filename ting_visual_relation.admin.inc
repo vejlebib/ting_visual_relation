@@ -21,6 +21,7 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
   $form['slides_table']['#tree'] = TRUE;
   $slides = db_select('ting_visual_relation_slides', 'tvrs')
     ->fields('tvrs')
+    ->orderBy('position', 'ASC')
     ->execute();
   foreach ($slides as $slide) {
     $form['slides_table'][$slide->slide_id] = array(
@@ -123,7 +124,13 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
  * Submit hanlder for ting_visual_relation_app_settings_form.
  */
 function ting_visual_relation_app_settings_form_table_submit($form, &$form_state) {
-
+  // Update the each slides position in the slideshow
+  foreach ($form_state['values']['slides_table'] as $slide_id => $slide) {
+    db_update('ting_visual_relation_slides')
+      ->condition('slide_id', $slide_id)
+      ->fields(array('position' => $slide['position']))
+      ->execute();
+  }
 }
 
 /**
