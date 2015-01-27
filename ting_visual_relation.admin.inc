@@ -124,7 +124,7 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
     '#type' => 'fieldset',
     '#title' => t('Add slide'),
   );
-
+  // Relation browser type
   $form['add_slide']['type'] = array(
     '#type' => 'select',
     '#title' => t('Relation browser type'),
@@ -132,7 +132,7 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
     '#options' => ting_visual_relation_types(),
     '#default_value' => 'external',
   );
-
+  // Datawell PID - Only visable when type external or circular is selected.
   $form['add_slide']['datawell_pid'] = array(
     '#type' => 'textfield',
     '#title' => t('Datawell PID'),
@@ -146,7 +146,7 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
       ),
     ),
   );
-
+  // Search query - Only visible when type structural is selected.
   $form['add_slide']['search_query'] = array(
     '#type' => 'textfield',
     '#title' => t('Search query'),
