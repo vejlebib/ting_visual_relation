@@ -307,7 +307,16 @@ function ting_visual_relation_slide_form_submit($form, &$form_state) {
  * Submit handler for the delete button on ting_visual_relation_slide_form.
  */
 function ting_visual_relation_slide_form_delete($form, &$form_state) {
-
+  // Preserve any destination passed on from previous pages
+  $destination = array();
+  if (isset($_GET['destination'])) {
+    $destination = drupal_get_destination();
+    unset($_GET['destination']);
+  }
+  // Should allways be set since this is only available on the edit form.
+  $slide_id = $form_state['slide']->slide_id;
+  $path = 'admin/config/ting/ting-visual-relation/app-settings/' . $slide_id .'/delete';
+  $form_state['redirect'] = array($path, array('query' => $destination));
 }
 
 /**
@@ -318,4 +327,28 @@ function ting_visual_relation_slide_form_cancel($form, &$form_state) {
   // ensures that the user will be taken back to a previous page if the
   // destination URL-parameter is set.
   drupal_goto('admin/config/ting/ting-visual-relation/app-settings');
+}
+
+/**
+ * Form builder for slide delete confirm form.
+ */
+function ting_visual_relation_delete_slide_confirm_form($form, &$form_state, $slide_id = NULL) {
+  // Save the slide for the submit handler.
+  $form['slide_id'] = array('#type' => 'value', '#value' => $slide_id);
+  return confirm_form($form,
+    t('Are you sure you want to delete the relation browser slide?'),
+    'admin/config/ting/ting-visual-relation/app-settings/' . $slide_id .'/edit',
+    t('This action cannot be undone.'),
+    t('delete'),
+    t('cancel')
+  );
+}
+
+/**
+ * Submit handler for the slide delete confirm form.
+ */
+function ting_visual_relation_delete_slide_confirm_form_submit($form, &$form_state) {
+  // Perform the deletion
+  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($form_state, TRUE), FILE_APPEND);
+  $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
 }
