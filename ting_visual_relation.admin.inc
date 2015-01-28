@@ -24,7 +24,8 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
     ->orderBy('position', 'ASC')
     ->execute();
   foreach ($slides as $slide) {
-    $form['slides_table'][$slide->slide_id] = array(
+    $slide_id = $slide->slide_id;
+    $form['slides_table'][$slide_id] = array(
       // Relation browser type for the slide
       'type' => array(
         '#markup' => $slide->type,
@@ -44,6 +45,11 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
         '#default_value' => $slide->position,
         '#delta' => 10,
         '#title_display' => 'invisible',
+      ),
+      'edit' => array(
+        '#type' => 'link',
+        '#title' => t('Edit'),
+        '#href' => 'admin/config/ting/ting-visual-relation/' . $slide_id . '/edit'
       ),
     );
   }
@@ -123,13 +129,15 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
         drupal_render($form['slides_table'][$slide_id]['search_query']),
         // Position column
         drupal_render($form['slides_table'][$slide_id]['position']),
+        // Edit slide link
+        drupal_render($form['slides_table'][$slide_id]['edit']),
       ),
       // Add the 'draggable' class to the tr-element
       'class' => array('draggable'),
     );
   }
   // Define the table-header values
-  $header = array(t('Type'), t('Datawell-PID'), t('Search query'), t('Position'));
+  $header = array(t('Type'), t('Datawell-PID'), t('Search query'), t('Position'), t('Edit'));
 
   // Id for out table (needed later)
   $table_id = 'ting-visual-relation-slides-table';
