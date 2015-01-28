@@ -142,9 +142,6 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
     'attributes' => array('id' => $table_id)
   ));
 
-  // Render submit buttonn for slides table
-  $output .= drupal_render($form['slides_table_actions']);
-
   // Render remaining form-elements
   $output .= drupal_render_children($form);
 
