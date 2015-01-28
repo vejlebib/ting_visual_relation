@@ -49,7 +49,7 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
       'edit' => array(
         '#type' => 'link',
         '#title' => t('Edit'),
-        '#href' => 'admin/config/ting/ting-visual-relation/' . $slide_id . '/edit'
+        '#href' => 'admin/config/ting/ting-visual-relation/app-settings/' . $slide_id . '/edit'
       ),
     );
   }
@@ -177,6 +177,17 @@ function ting_visual_relation_app_settings_form_submit($form, &$form_state) {
  * Form for adding a slide to the Visual relation app.
  */
 function ting_visual_relation_slide_form($form, &$form_state, $slide_id = NULL) {
+  $slide = FALSE;
+  // If this is the edit form load the slide settings from the database.
+  if (isset($slide_id)) {
+    $slide = db_select('ting_visual_relation_slides', 'tvrs')
+      ->fields('tvrs')
+      ->condition('tvrs.slide_id', $slide_id)
+      ->execute()
+      ->fetchObject();
+    // Save the slide for later use
+    $form_state['slide'] = $slide;
+  }
   $form['add_slide'] = array(
     '#type' => 'fieldset',
     '#title' => t('Add slide'),
@@ -187,13 +198,14 @@ function ting_visual_relation_slide_form($form, &$form_state, $slide_id = NULL) 
     '#title' => t('Relation browser type'),
     '#description' => t('Select the type of relation browser slide to create'),
     '#options' => ting_visual_relation_types(),
-    '#default_value' => 'external',
+    '#default_value' => $slide ? $slide->type : 'external',
   );
   // Datawell PID - Only visable when type external or circular is selected.
   $form['add_slide']['datawell_pid'] = array(
     '#type' => 'textfield',
     '#title' => t('Datawell PID'),
     '#description' => t('Enter the datawell PID the browser should be based on'),
+    '#default_value' => $slide ? $slide->datawell_pid : '',
     '#states' => array(
       'visible' => array(
         ':input[name="type"]' => array(
@@ -208,24 +220,34 @@ function ting_visual_relation_slide_form($form, &$form_state, $slide_id = NULL) 
     '#type' => 'textfield',
     '#title' => t('Search query'),
     '#description' => t('Enter the search query the browser should be based on'),
+    '#default_value' => $slide ? $slide->search_query : '',
     '#states' => array(
       'visible' => array(
         ':input[name="type"]' => array('value' => 'structural'),
       ),
     ),
   );
-
+  // Form actions
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
-    '#value' => t('Save slide'),
+    '#value' => $slide ? t('Update') : t('Save'),
   );
+  // Should only be included if user is editing an existing slide.
+  if ($slide) {
+    $form['actions']['delete'] = array(
+      '#type' => 'submit',
+      '#value' => t('Delete'),
+      '#submit' => array('ting_visual_relation_slide_form_delete'),
+    );
+  }
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
     '#submit' => array('ting_visual_relation_slide_form_cancel'),
     // Bypass form-validation since this is a cancel-button
     '#limit_validation_errors' => array(),
+    '#weight' => 40,
   );
   return $form;
 }
@@ -265,10 +287,27 @@ function ting_visual_relation_slide_form_submit($form, &$form_state) {
     case 'structural':
       $fields['search_query'] = $form_state['values']['search_query'];
   }
-  // Save and go back to table overview.
-  db_insert('ting_visual_relation_slides')->fields($fields)->execute();
+  // Determine if this is an update or insert
+  $slide = isset($form_state['slide']) ? $form_state['slide'] : FALSE;
+  if ($slide) {
+    db_update('ting_visual_relation_slides')
+      ->condition('slide_id', $slide->slide_id)
+      ->fields($fields)
+      ->execute();
+  }
+  else {
+    db_insert('ting_visual_relation_slides')->fields($fields)->execute();
+  }
+  // Set message and go back to table overview
   drupal_set_message(t('Slide saved'));
   $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
+}
+
+/**
+ * Submit handler for the delete button on ting_visual_relation_slide_form.
+ */
+function ting_visual_relation_slide_form_delete($form, &$form_state) {
+
 }
 
 /**
