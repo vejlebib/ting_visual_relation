@@ -47,18 +47,14 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
       ),
     );
   }
-  $form['slides_table_actions'] = array('#type' => 'actions');
-  // Add submit handler
-  $form['slides_table_actions']['submit'] = array(
-    '#type' => 'submit',
-    '#value' => t('Save changes'),
-    '#submit' => array('ting_visual_relation_app_settings_form_table_submit'),
+  // time between each slide.
+  $form['interval'] = array(
   );
-  $form['slideshow_settings'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('Slideshow settings'),
-    '#tree' => TRUE,
-    '#weight' => 40,
+  $form['actions'] = array('#type' => 'actions');
+  // Add submit handler
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save settings'),
   );
   return $form;
 }
@@ -68,6 +64,18 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
  * adds tabledrag functionality.
  */
 function theme_ting_visual_relation_app_settings_form(&$variables) {
+  $table_title = array(
+    '#type' => 'html_tag',
+    '#tag' => 'h3',
+    '#value' => t('Slideshow overview'),
+  );
+  $output = drupal_render($table_title);
+  $table_description = array(
+    '#type' => 'html_tag',
+    '#tag' => 'p',
+    '#value' => t('Manage settings and position for the different slide in the slidswhow.'),
+  );
+  $output .= drupal_render($table_description);
   // Get the form passed along from the form-builder.
   // See: ting_visual_relation_app_settings_form above.
   $form = $variables['form'];
@@ -102,7 +110,7 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
   $table_id = 'ting-visual-relation-slides-table';
 
   // Theme the table output
-  $output = theme('table', array(
+  $output .= theme('table', array(
     'header' => $header,
     'rows' => $rows,
     'attributes' => array('id' => $table_id)
@@ -123,8 +131,8 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
 /**
  * Submit hanlder for ting_visual_relation_app_settings_form.
  */
-function ting_visual_relation_app_settings_form_table_submit($form, &$form_state) {
-  // Update the each slides position in the slideshow
+function ting_visual_relation_app_settings_form_submit($form, &$form_state) {
+  // Update each slides position in the slideshow
   foreach ($form_state['values']['slides_table'] as $slide_id => $slide) {
     db_update('ting_visual_relation_slides')
       ->condition('slide_id', $slide_id)
