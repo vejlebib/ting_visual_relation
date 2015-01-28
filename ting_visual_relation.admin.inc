@@ -45,7 +45,6 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
         '#delta' => 10,
         '#title_display' => 'invisible',
       ),
-
     );
   }
   // Time between each slide.
@@ -169,7 +168,7 @@ function ting_visual_relation_app_settings_form_submit($form, &$form_state) {
 /**
  * Form for adding a slide to the Visual relation app.
  */
-function ting_visual_relation_add_slide_form($form, &$form_state) {
+function ting_visual_relation_slide_form($form, &$form_state) {
   $form['add_slide'] = array(
     '#type' => 'fieldset',
     '#title' => t('Add slide'),
@@ -226,7 +225,7 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
 /**
  * Validation handler for ting_visual_relation_add_slide_form.
  */
-function ting_visual_relation_add_slide_form_validate($form, &$form_state) {
+function ting_visual_relation_slide_form_validate($form, &$form_state) {
   $type = $form_state['values']['type'];
   switch ($type) {
     case 'external':
@@ -247,7 +246,7 @@ function ting_visual_relation_add_slide_form_validate($form, &$form_state) {
 /**
  * Submit handler for ting_visual_relation_add_slide_form.
  */
-function ting_visual_relation_add_slide_form_submit($form, &$form_state) {
+function ting_visual_relation_slide_form_submit($form, &$form_state) {
   $type = $form_state['values']['type'];
   $fields = array('type' => $type);
   switch ($type) {
@@ -267,7 +266,7 @@ function ting_visual_relation_add_slide_form_submit($form, &$form_state) {
 /**
  * Submit handler for the cancel button on ting_visual_relation_add_slide_form.
  */
-function ting_visual_relation_add_slide_form_cancel($form, &$form_state) {
+function ting_visual_relation_slide_form_cancel($form, &$form_state) {
   // Since the form is being cancelled, we can use drupal_goto. This also
   // ensures that the user will be taken back to a previous page if the
   // destination URL-parameter is set.
