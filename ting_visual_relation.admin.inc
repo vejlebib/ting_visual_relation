@@ -168,7 +168,7 @@ function ting_visual_relation_app_settings_form_submit($form, &$form_state) {
 /**
  * Form for adding a slide to the Visual relation app.
  */
-function ting_visual_relation_slide_form($form, &$form_state) {
+function ting_visual_relation_slide_form($form, &$form_state, $slide_id = NULL) {
   $form['add_slide'] = array(
     '#type' => 'fieldset',
     '#title' => t('Add slide'),
