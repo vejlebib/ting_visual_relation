@@ -87,7 +87,7 @@ function ting_visual_relation_menu() {
   $items['admin/config/ting/ting-visual-relation/app-settings/%/edit'] = array(
     'title' => 'Edit slide',
     'description' => 'Edit a slide from the Visual relation app slideshow',
-    'page arguments' => array('ting_visual_relation_edit_slide_form', 4),
+    'page arguments' => array('ting_visual_relation_edit_slide_form', 5),
   ) + $common;
 	return $items;
 }
