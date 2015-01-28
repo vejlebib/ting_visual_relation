@@ -47,8 +47,29 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
       ),
     );
   }
-  // time between each slide.
+  // Time between each slide.
+  $intervals = array(
+    30,
+    60,
+    90,
+    120,
+    150,
+    180,
+    210,
+    240,
+    270,
+    300,
+  );
+  $options = array();
+  foreach ($intervals as $interval) {
+    $options[$interval] = format_interval($interval, 2);
+  }
   $form['interval'] = array(
+    '#type' => 'select',
+    '#title' => t('Slideshow interval'),
+    '#description' => t('Adjust the time a slide is shown in the slideshow before showing the next one.'),
+    '#options' => $options,
+    '#default_value' => 120,
   );
   $form['actions'] = array('#type' => 'actions');
   // Add submit handler
@@ -64,16 +85,20 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
  * adds tabledrag functionality.
  */
 function theme_ting_visual_relation_app_settings_form(&$variables) {
+  // Render table title and description.
   $table_title = array(
     '#type' => 'html_tag',
-    '#tag' => 'h3',
+    '#tag' => 'label',
     '#value' => t('Slideshow overview'),
   );
   $output = drupal_render($table_title);
   $table_description = array(
     '#type' => 'html_tag',
-    '#tag' => 'p',
-    '#value' => t('Manage settings and position for the different slide in the slidswhow.'),
+    '#tag' => 'div',
+    '#value' => t('Manage settings and position for the different slides in the slideshow.'),
+    '#attributes' => array(
+      'class' => 'description',
+    ),
   );
   $output .= drupal_render($table_description);
   // Get the form passed along from the form-builder.
