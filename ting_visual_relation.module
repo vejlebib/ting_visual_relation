@@ -84,7 +84,6 @@ function ting_visual_relation_menu() {
     'page arguments' => array('ting_visual_relation_add_slide_form'),
     'type' => MENU_LOCAL_ACTION,
   ) + $common;
-
 	return $items;
 }
 
@@ -131,6 +130,20 @@ function ting_visual_relation_ding_provider_user() {
       'install time setup' => TRUE,
     ),
   );
+}
+
+/**
+ * Implements hook_forms()
+ */
+function ting_visual_relation_forms() {
+  $forms = array();
+  $forms['ting_visual_relation_add_slide_form'] = array(
+    'callback' => 'ting_visual_relation_slide_form',
+  );
+  $forms['ting_visual_relation_edit_slide_form'] = array(
+    'callback' => 'ting_visual_relation_slide_form',
+  );
+  return $forms;
 }
 
 /**
