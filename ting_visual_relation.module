@@ -89,6 +89,11 @@ function ting_visual_relation_menu() {
     'description' => 'Edit a slide from the Visual relation app slideshow',
     'page arguments' => array('ting_visual_relation_edit_slide_form', 5),
   ) + $common;
+  $items['admin/config/ting/ting-visual-relation/app-settings/%/delete'] = array(
+    'title' => 'Delete slide',
+    'description' => 'Delete a slide from the Visual relation app slideshow',
+    'page arguments' => array('ting_visual_relation_delete_slide_confirm_form', 5),
+  ) + $common;
 	return $items;
 }
 
