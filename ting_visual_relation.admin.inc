@@ -69,7 +69,7 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
     '#title' => t('Slideshow interval'),
     '#description' => t('Adjust the time a slide is shown in the slideshow before showing the next one.'),
     '#options' => $options,
-    '#default_value' => 120,
+    '#default_value' => variable_get('ting_visual_relation_slideshow_interval', 120),
   );
   $form['actions'] = array('#type' => 'actions');
   // Add submit handler
@@ -164,6 +164,8 @@ function ting_visual_relation_app_settings_form_submit($form, &$form_state) {
       ->fields(array('position' => $slide['position']))
       ->execute();
   }
+  variable_set('ting_visual_relation_slideshow_interval', $form_state['values']['interval']);
+  drupal_set_message(t('Your settings have been saved'));
 }
 
 /**
