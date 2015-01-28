@@ -215,7 +215,7 @@ function ting_visual_relation_slide_form($form, &$form_state) {
   $form['actions']['cancel'] = array(
     '#type' => 'submit',
     '#value' => t('Cancel'),
-    '#submit' => array('ting_visual_relation_add_slide_form_cancel'),
+    '#submit' => array('ting_visual_relation_slide_form_cancel'),
     // Bypass form-validation since this is a cancel-button
     '#limit_validation_errors' => array(),
   );
