@@ -45,6 +45,7 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
         '#delta' => 10,
         '#title_display' => 'invisible',
       ),
+
     );
   }
   // Time between each slide.
@@ -215,7 +216,13 @@ function ting_visual_relation_add_slide_form($form, &$form_state) {
     '#type' => 'submit',
     '#value' => t('Save slide'),
   );
-
+  $form['actions']['cancel'] = array(
+    '#type' => 'submit',
+    '#value' => t('Cancel'),
+    '#submit' => array('ting_visual_relation_add_slide_form_cancel'),
+    // Bypass form-validation since this is a cancel-button
+    '#limit_validation_errors' => array(),
+  );
   return $form;
 }
 
@@ -258,4 +265,14 @@ function ting_visual_relation_add_slide_form_submit($form, &$form_state) {
   db_insert('ting_visual_relation_slides')->fields($fields)->execute();
   drupal_set_message(t('Slide saved'));
   $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
+}
+
+/**
+ * Submit handler for the cancel button on ting_visual_relation_add_slide_form.
+ */
+function ting_visual_relation_add_slide_form_cancel($form, &$form_state) {
+  // Since the form is being cancelled, we can use drupal_goto. This also
+  // ensures that the user will be taken back to a previous page if the
+  // destination URL-parameter is set.
+  drupal_goto('admin/config/ting/ting-visual-relation/app-settings');
 }
