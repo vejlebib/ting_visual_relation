@@ -53,6 +53,10 @@ function ting_visual_relation_menu() {
     'title' => 'Get search result',
     'page callback' => 'ting_visual_relation_get_search_result',
   ) + $common;
+  $items[̈́'ting-visual-relation/get-slideshow-settings'] = array(
+    'title' => 'Get slideshow settings',
+    'page callback' => 'ting_visual_relation_get_slideshow_settings',
+  ) + $common;
 
   // Administration
   $common = array(
