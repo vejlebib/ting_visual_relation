@@ -323,10 +323,8 @@ function ting_visual_relation_slide_form_delete($form, &$form_state) {
  * Submit handler for the cancel button on ting_visual_relation_add_slide_form.
  */
 function ting_visual_relation_slide_form_cancel($form, &$form_state) {
-  // Since the form is being cancelled, we can use drupal_goto. This also
-  // ensures that the user will be taken back to a previous page if the
-  // destination URL-parameter is set.
-  drupal_goto('admin/config/ting/ting-visual-relation/app-settings');
+  // Go back to app-settings (or destination if parameter is set)
+  $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
 }
 
 /**
