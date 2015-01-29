@@ -349,6 +349,39 @@ function ting_visual_relation_get_search_result($search_engine = NULL, $search_q
 }
 
 /**
+ * Returns the slideshow settings as setup in the administration interface.
+ *
+ * AJAX-callback for: ting-visual-relation/get-slideshow-settings
+ */
+function ting_visual_relation_get_slideshow_settings() {
+  $response = array();
+  $response['interval'] = variable_get('ting_visual_relation_slideshow_interval', 120);
+  $response['slides'] = array();
+  $slides = db_select('ting_visual_relation_slides', 'tvrs')
+    ->fields('tvrs')
+    ->orderBy('position', 'ASC')
+    ->execute();
+  $position = 0;
+  foreach ($slides as $slide) {
+    // The id is of no interest to the app
+    unset($slide->slide_id);
+    // Output positive positions values: 1,2,3,....
+    $slide->position = ++$position;
+    // Remove uneeded properties
+    switch ($slide->type) {
+      case 'external':
+      case 'circular':
+        unset($slide->search_query);
+        break;
+      case 'structural':
+        unset($slide->datawell_pid);
+    }
+    $response['slides'][] = $slide;
+  }
+  ting_visual_relation_json_output($response);
+}
+
+/**
  * Wrapper function for json output that handles jsonp request if a callback
  * is supplied. Otherwise it falls back to normal json output.
  */
