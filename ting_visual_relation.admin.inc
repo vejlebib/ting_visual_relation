@@ -307,7 +307,7 @@ function ting_visual_relation_slide_form_submit($form, &$form_state) {
  * Submit handler for the delete button on ting_visual_relation_slide_form.
  */
 function ting_visual_relation_slide_form_delete($form, &$form_state) {
-  // Preserve any destination passed on from previous pages
+  // Pass along any destination parameter set from previous pages
   $destination = array();
   if (isset($_GET['destination'])) {
     $destination = drupal_get_destination();
