@@ -347,6 +347,10 @@ function ting_visual_relation_delete_slide_confirm_form($form, &$form_state, $sl
  */
 function ting_visual_relation_delete_slide_confirm_form_submit($form, &$form_state) {
   // Perform the deletion
-  file_put_contents("/home/drupalpro/debug/debug.txt", print_r($form_state, TRUE), FILE_APPEND);
+  $slide_id = $form_state['values']['slide_id'];
+  $success = db_delete('ting_visual_relation_slides')
+    ->condition('slide_id', $slide_id)
+    ->execute();
+  drupal_set_message('Slide deleted');
   $form_state['redirect'] = 'admin/config/ting/ting-visual-relation/app-settings';
 }
