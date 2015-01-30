@@ -382,6 +382,15 @@ function ting_visual_relation_get_slideshow_settings() {
 }
 
 /**
+ * Sends a mail with bookmarks chosen by the users of the Visual relation app.
+ *
+ * AJAX-callback for: ting-visual-relation/send-bookmark-mail
+ */
+function  ting_visual_relation_send_bookmark_mail($mail) {
+
+}
+
+/**
  * Wrapper function for json output that handles jsonp request if a callback
  * is supplied. Otherwise it falls back to normal json output.
  */
