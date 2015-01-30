@@ -198,6 +198,13 @@ function ting_visual_relation_slide_form($form, &$form_state, $slide_id = NULL) 
     '#type' => 'fieldset',
     '#title' => t('Add slide'),
   );
+  // Slide name
+  $form['add_slide']['name'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Name'),
+    '#description' => t('Enter the human readable name of the slide'),
+    '#default_value' => $slide ? $slide->name : '',
+  );
   // Relation browser type
   $form['add_slide']['type'] = array(
     '#type' => 'select',
@@ -262,6 +269,9 @@ function ting_visual_relation_slide_form($form, &$form_state, $slide_id = NULL) 
  * Validation handler for ting_visual_relation_add_slide_form.
  */
 function ting_visual_relation_slide_form_validate($form, &$form_state) {
+  if (empty($form_state['values']['name'])) {
+    form_set_error('name', t('Please enter a name for the slide'));
+  }
   $type = $form_state['values']['type'];
   switch ($type) {
     case 'external':
@@ -284,7 +294,10 @@ function ting_visual_relation_slide_form_validate($form, &$form_state) {
  */
 function ting_visual_relation_slide_form_submit($form, &$form_state) {
   $type = $form_state['values']['type'];
-  $fields = array('type' => $type);
+  $fields = array(
+    'name' => $form_state['values']['name'],
+    'type' => $type,
+  );
   switch ($type) {
     case 'external':
     case 'circular':
