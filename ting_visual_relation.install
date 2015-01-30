@@ -51,6 +51,7 @@ function ting_visual_relation_schema() {
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
+        'default' => 'Name',
       ),
     ),
     'primary key' => array('slide_id'),
