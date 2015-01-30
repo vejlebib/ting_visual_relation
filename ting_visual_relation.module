@@ -57,6 +57,10 @@ function ting_visual_relation_menu() {
     'title' => 'Get slideshow settings',
     'page callback' => 'ting_visual_relation_get_slideshow_settings',
   ) + $common;
+  $items['ting-visual-relation/send-bookmark-mail'] = array(
+    'title' => 'Send mail with bookmarks',
+    'page callback' => 'ting_visual_relation_send_bookmark_mail',
+  ) + $common;
 
   // Administration
   $common = array(
