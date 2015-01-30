@@ -121,15 +121,14 @@ function ting_visual_relation_update_7001(&$sandbox) {
  * Adds the 'name' field to the 'ting_visual_relation_slides' table.
  */
 function ting_visual_relation_update_7002(&$sandbox) {
-  $name_field = array(
-    'name'  => array(
-      'description' => 'The human readable name of the slide.',
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-    ),
+  $field = array(
+    'description' => 'The human readable name of the slide.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => 'Name'
   );
-  if (!db_field_exists('ting_visual_relation_slides', $name_field)) {
-    db_add_field('ting_visual_relation_slides', $name_field);
+  if (!db_field_exists('ting_visual_relation_slides', 'name')) {
+    db_add_field('ting_visual_relation_slides', 'name', $field);
   }
 }
