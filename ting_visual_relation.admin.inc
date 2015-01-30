@@ -26,6 +26,10 @@ function ting_visual_relation_app_settings_form($form, &$form_state) {
   foreach ($slides as $slide) {
     $slide_id = $slide->slide_id;
     $form['slides_table'][$slide_id] = array(
+      // The human readable name of the slide
+      'name' => array(
+        '#markup' => $slide->name,
+      ),
       // Relation browser type for the slide
       'type' => array(
         '#markup' => $slide->type,
@@ -121,6 +125,8 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
     // Add each element to the rows-array
     $rows[] = array(
       'data' => array(
+        // Name column
+        drupal_render($form['slides_table'][$slide_id]['name']),
         // Type column
         drupal_render($form['slides_table'][$slide_id]['type']),
         // Datawell-PID column
@@ -137,7 +143,7 @@ function theme_ting_visual_relation_app_settings_form(&$variables) {
     );
   }
   // Define the table-header values
-  $header = array(t('Type'), t('Datawell-PID'), t('Search query'), t('Position'), t('Edit'));
+  $header = array(t('Name'), t('Type'), t('Datawell-PID'), t('Search query'), t('Position'), t('Edit'));
 
   // Id for out table (needed later)
   $table_id = 'ting-visual-relation-slides-table';
