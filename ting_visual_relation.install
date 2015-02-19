@@ -61,6 +61,35 @@ function ting_visual_relation_schema() {
 }
 
 /**
+ * Implements hook_install().
+ */
+function ting_visual_relation_install() {
+  _ting_visual_relation_modify_mail_system_variable();
+}
+
+/**
+ * Modify Drupal's mail_system variable to use our custom class when sending
+ * mails from this module only.
+ */
+function _ting_visual_relation_modify_mail_system_variable() {
+  variable_set('mail_system',
+    array_merge(
+      variable_get('mail_system', array('default-system' => 'DefaultMailSystem')),
+      array('ting_visual_relation' => 'TingVisualRelationMailSystem')
+    )
+  );
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function ting_visual_relation_uninstall() {
+  $mail_system = variable_get('mail_system', array('default-system' => 'DefaultMailSystem'));
+  unset($mail_system['ting_visual_relation']);
+  variable_set('mail_system', $mail_system);
+}
+
+/**
  * Adds the first version of the ting_visual_relation_slides table
  */
 function ting_visual_relation_update_7000(&$sandbox) {
