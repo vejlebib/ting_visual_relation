@@ -382,12 +382,42 @@ function ting_visual_relation_get_slideshow_settings() {
 }
 
 /**
- * Sends a mail with bookmarks chosen by the users of the Visual relation app.
+ * Sends a mail with a list of materials, with the datawell 3 PID's given by
+ * the 'nids' request parameter.
  *
  * AJAX-callback for: ting-visual-relation/send-bookmark-mail
  */
-function  ting_visual_relation_send_bookmark_mail($mail) {
+function ting_visual_relation_send_bookmark_mail($mail = NULL) {
+  $response['result'] = FALSE;
+  // No need to continue if suppplied mail is invalid or not supplied.
+  if (isset($mail) && valid_email_address($mail)) {
 
+    $datawell_pids = isset($_REQUEST['pids']) ? $_REQUEST['pids'] : array();
+
+    // Filter out invalid datawell PIDs
+    $datawell_pids = array_filter($datawell_pids, '_ting_visual_relation_validate_datawell_pid');
+
+    // If there's still pids left; Construct the message and send it
+    if (!empty($datawell_pids)) {
+      $message = '';
+      foreach ($datawell_pids as $datawell_pid) {
+        $ting_entity = ding_entity_load($datawell_pid);
+        $message .= '<p>' . $ting_entity->title . '</p>' . "\n";
+      }
+      // Try to use admin@sitedomain if site_mail isn't set.
+      $from = variable_get('site_mail', 'admin@' . $_SERVER['SERVER_NAME']);
+      $to = $mail;
+      $module = 'ting_visual_relation';
+      $key = 'ting_visual_relation_bookmark_mail';
+      $params['message'] = $message;
+      // This parameter is appearently required, so we just use default.
+      $language = language_default();
+      $result = drupal_mail($module, $key, $to, $language, $params, $from);
+      $response['result'] = $result['result'];
+    }
+
+  }
+  ting_visual_relation_json_output($response);
 }
 
 /**
