@@ -7,6 +7,7 @@ dependencies[] = features_override
 dependencies[] = d3
 dependencies[] = ding_ting_frontend
 files[] = ting_visual_relation.module
+files[] = ting_visual_relation.mail.inc
 features[features_api][] = api:2
 features[features_override_items][] = field_group.group_ting_object_right_column|ting_object|ting_object|default
 features[features_overrides][] = field_group.group_ting_object_right_column|ting_object|ting_object|default.data|children|7
