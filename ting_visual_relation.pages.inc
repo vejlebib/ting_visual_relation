@@ -547,3 +547,27 @@ function ting_visual_relation_get_default_cover_url($ting_entity) {
 function _ting_visual_relation_validate_func_name($function_name) {
 	return ctype_alnum(str_replace('_', '', $function_name));
 }
+
+/**
+ * Helper function to validate a datawell 3 PID.
+ */
+function _ting_visual_relation_validate_datawell_pid($datawell_pid) {
+  $result = FALSE;
+  // First we check if the datawell-pid has a valid structure.
+  if (preg_match('/^\d+-\D+:\w+$/', $datawell_pid)) {
+    // ding_entity_load() seems to insert rows in the ting_object table even
+    // if the supplied datawell pid doesn't result in a valid object from the
+    // datawell. Since we're using ding_entity_load() in this module we call
+    // ting_get_object() here to see if the pid returns an object and only mark
+    // the pid as valid if it does. This prevents uneeded rows in the
+    // ting_object table and there shouldn't be much performance overhead,
+    // since ting_get_object() caches the reply from the well.
+    // When (and if) the TingObjectController load function gets fixed, this
+    // should be removed and replaced by checks in the functions using
+    // ding_entity_load().
+    if (ting_get_object($datawell_pid) != NULL) {
+      $result = TRUE;
+    }
+  }
+  return $result;
+}
