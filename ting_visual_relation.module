@@ -166,6 +166,42 @@ function ting_visual_relation_forms() {
 }
 
 /**
+ * Implements hook_mail().
+ */
+function ting_visual_relation_mail($key, &$message, $params) {
+  switch ($key) {
+    case 'ting_visual_relation_bookmark_mail':
+      $message['id'] = $key;
+      $message['subject'] = t('Bookmark mail sent from Visual relation application');
+      $message['body'][] = '<h1>' . t('The materails you bookmarked in the Visual relation application today') . '</h2>';
+      $message['body'][] = '<p>' . t('Each title is a link to the materail on our website.') . '</p>';
+      $message['body'][] = '<p>' . t('On the website you can view further information about the materail, bookmark to your pesonal account and/or reserve it for pick up at the library.') . '</p>';
+      $message['body'][] = $params['message'];
+      break;
+  }
+}
+
+/**
+ * Implements hook_mail_alter().
+ *
+ * Adds headers to allow HTML mails to be sent from this module.
+ * @see https://api.drupal.org/api/drupal/modules!system!system.api.php/function/hook_mail_alter/7
+ */
+function ting_visual_relation_mail_alter(&$message) {
+  if ($message['id'] == 'ting_visual_relation_bookmark_mail') {
+    $headers = array(
+        'MIME-Version' => '1.0',
+        'Content-Type' => 'text/html; charset=iso-8859-1; format=flowed',
+        'Content-Transfer-Encoding' => '8Bit',
+        'X-Mailer' => 'Drupal',
+    );
+    foreach ($headers as $key => $value) {
+        $message['headers'][$key] = $value;
+    }
+  }
+}
+
+/**
  * Implements hook_field_info().
  *
  * The field is configured as a virtual field with features without using
