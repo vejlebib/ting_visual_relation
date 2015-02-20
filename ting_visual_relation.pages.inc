@@ -400,9 +400,13 @@ function ting_visual_relation_send_bookmark_mail($mail = NULL) {
     // If there's still pids left; Construct the message and send it
     if (!empty($datawell_pids)) {
       $message = '';
+      global $base_url;
       foreach ($datawell_pids as $datawell_pid) {
         $ting_entity = ding_entity_load($datawell_pid);
-        $message .= '<p>' . $ting_entity->title . '</p>' . "\n";
+        $message .= format_string('<p><a href="@url">@title</a></p>', array(
+          '@url' => $base_url . '/ting/object/' . $ting_entity->id,
+          '@title' => $ting_entity->title,
+        ));
       }
       // Try to use admin@sitedomain if site_mail isn't set.
       $from = variable_get('site_mail', 'admin@' . $_SERVER['SERVER_NAME']);
