@@ -173,7 +173,7 @@ function ting_visual_relation_mail($key, &$message, $params) {
     case 'ting_visual_relation_bookmark_mail':
       $message['id'] = $key;
       $message['subject'] = t('Bookmark mail sent from Visual relation application');
-      $message['body'][] = '<h1>' . t('The materails you bookmarked in the Visual relation application today') . '</h2>';
+      $message['body'][] = '<h2>' . t('The materails you bookmarked in the Visual relation application today') . '</h2>';
       $message['body'][] = '<p>' . t('Each title is a link to the materail on our website.') . '</p>';
       $message['body'][] = '<p>' . t('On the website you can view further information about the materail, bookmark to your pesonal account and/or reserve it for pick up at the library.') . '</p>';
       $message['body'][] = $params['message'];
