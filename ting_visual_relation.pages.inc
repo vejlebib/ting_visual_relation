@@ -432,14 +432,15 @@ function ting_visual_relation_json_output($response) {
   isset($_REQUEST['callback']) ? $callback = $_REQUEST['callback'] : $callback = FALSE;
   // If it's a jsonp request with a valid javascript function
   if ($callback && _ting_visual_relation_validate_func_name($callback)) {
+    drupal_add_http_header('Content-type', 'text/javascript; utf-8');
     $response = drupal_json_encode($response);
-    header('Content-type: text/javascript');
     echo $callback . '(' . $response . ');';
   }
   // If normal json request or invalid callback: Return normal json as fallback
   else {
     drupal_json_output($response);
   }
+  drupal_exit();
 }
 
 /**
