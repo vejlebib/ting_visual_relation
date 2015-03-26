@@ -3,6 +3,10 @@
   border: none;
 }
 
+.ting-object .ting-visual-relation-wrapper {
+  border-bottom: 1px solid #efefef;
+}
+
 .ting-object .ting-visual-relation-activator {
   border-radius: 10px;
   color: #fff;

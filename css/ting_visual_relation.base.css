@@ -5,13 +5,21 @@
 }
 
 /* Basic styling of activators on ting objects */
+.ting-object .ting-visual-relation-wrapper {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+}
+
 .ting-object .ting-visual-relation-activator-wrapper {
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  margin-bottom: 1.2em;
   display: block;
   float: left;
   width: 100%;
+}
+
+.ting-object .ting-visual-relation-activator-wrapper:first-child {
+  margin-bottom: 20px;
 }
 
 .ting-object .ting-visual-relation-activator {
@@ -25,6 +33,7 @@
 
   .ting-object .ting-visual-relation-activator-wrapper:first-child {
     padding-right: 0.5em;
+    margin-bottom: 0;
   }
 }
 
