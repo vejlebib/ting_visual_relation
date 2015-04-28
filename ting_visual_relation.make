@@ -9,7 +9,7 @@ projects[features_override][version] = 2.0-rc2
 
 projects[ding_ting_frontend][type] = "module"
 projects[ding_ting_frontend][download][type] = "git"
-projects[ding_ting_frontend][download][url] = "git@github.com:ding2tal/ding_ting_frontend.git"
+projects[ding_ting_frontend][download][url] = "git@github.com:ding2/ding_ting_frontend.git"
 projects[ding_ting_frontend][download][tag] = "7.x-1.0"
 
 ; Libraries
