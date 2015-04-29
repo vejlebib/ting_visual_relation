@@ -5,6 +5,9 @@ core = 7.x
 projects[features_override][subdir] = "contrib"
 projects[features_override][version] = 2.0-rc2
 
+projects[d3][subdir] = "contrib"
+projects[d3][version] = "1.x-dev"
+
 ;Ding2 modules
 projects[ding_ting_frontend][type] = "module"
 projects[ding_ting_frontend][download][type] = "git"
